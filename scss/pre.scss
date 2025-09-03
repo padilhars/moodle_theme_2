@@ -1,0 +1,65 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Pre-SCSS for theme_ufpel
+ *
+ * This file is loaded BEFORE the preset file.
+ * It should contain variable definitions that need to override Bootstrap defaults.
+ * Variables defined here will be used by Bootstrap during compilation.
+ *
+ * @package    theme_ufpel
+ * @copyright  2025 Your Organization
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// Bootstrap variable overrides.
+// Uncomment and modify as needed for institutional branding.
+// These variables must be defined before Bootstrap is imported.
+
+// Example color scheme for UFPel (commented out to maintain Boost defaults):
+// Primary colors.
+// $primary:    #004b23;  // UFPel institutional green
+// $secondary:  #6c757d;
+// $success:    #28a745;
+// $info:       #17a2b8;
+// $warning:    #ffc107;
+// $danger:     #dc3545;
+// $light:      #f8f9fa;
+// $dark:       #343a40;
+
+// Typography.
+// $font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+// $font-size-base: 0.9375rem;
+// $line-height-base: 1.5;
+
+// Spacing.
+// $spacer: 1rem;
+
+// Border radius.
+// $border-radius: .25rem;
+// $border-radius-lg: .3rem;
+// $border-radius-sm: .2rem;
+
+// Shadows.
+// $box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
+// $box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+// $box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+
+// Links.
+// $link-color: $primary;
+// $link-decoration: none;
+// $link-hover-color: darken($link-color, 15%);
+// $link-hover-decoration: underline;
