@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme UFPel - Simplified Configuration
+ * Theme UFPel - Configuration (Moodle 5.x Compatible)
  *
  * @package    theme_ufpel
  * @copyright  2025 Your Organization
@@ -24,29 +24,55 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// The name of the theme.
+// Verify Moodle version compatibility.
+if (!defined('MOODLE_INTERNAL') || version_compare($CFG->version ?? '0', '2024041600', '<')) {
+    throw new moodle_exception('incompatibleversion', 'theme_ufpel');
+}
+
+// Theme name.
 $THEME->name = 'ufpel';
 
-// This theme depends upon Boost.
+// Parent theme - inherits from Boost.
 $THEME->parents = ['boost'];
 
-// Main SCSS file.
+// SCSS compilation function.
 $THEME->scss = function($theme) {
     return theme_ufpel_get_main_scss_content($theme);
 };
 
-// We don't add custom layouts - use Boost's.
+// Use Boost's layouts - no custom layouts needed for basic child theme.
 $THEME->layouts = [];
 
-// Enable dock.
+// Theme capabilities.
 $THEME->enable_dock = false;
-
-// Use course index.
 $THEME->usescourseindex = true;
+$THEME->usefallback = true;
 
-// This is a basic theme - no fancy features.
-$THEME->yuicssmodules = [];
+// Renderer factory - use standard overridden factory.
 $THEME->rendererfactory = 'theme_overridden_renderer_factory';
+
+// No required blocks.
 $THEME->requiredblocks = '';
 
-// End of file.
+// Supported output formats.
+$THEME->supportscssoptimisation = true;
+$THEME->yuicssmodules = [];
+
+// Image and icon settings for Moodle 5.x compatibility.
+$THEME->iconsystem = \core\output\icon_system::FONTAWESOME;
+
+// Template settings for Mustache compatibility.
+$THEME->prescsscallback = 'theme_ufpel_get_pre_scss';
+$THEME->extrascsscallback = 'theme_ufpel_get_post_scss';
+
+// Additional theme settings that may be useful.
+$THEME->javascripts = [];
+$THEME->javascripts_footer = [];
+
+// Editor stylesheets.
+$THEME->editor_sheets = [];
+
+// Disable theme designer mode optimizations in production.
+$THEME->blockrtlcss = true;
+
+// End of configuration.

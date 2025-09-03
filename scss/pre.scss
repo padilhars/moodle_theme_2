@@ -14,52 +14,200 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Pre-SCSS for theme_ufpel
+ * Pre-SCSS for theme_ufpel (Moodle 5.x Optimized)
  *
- * This file is loaded BEFORE the preset file.
- * It should contain variable definitions that need to override Bootstrap defaults.
- * Variables defined here will be used by Bootstrap during compilation.
+ * This file contains SCSS variables that are processed BEFORE the main preset.
+ * Variables defined here will override Bootstrap defaults and should be used
+ * for institutional branding and theming requirements.
+ *
+ * IMPORTANT: Only variable definitions should be included here.
+ * No actual CSS rules or selectors should be added to this file.
  *
  * @package    theme_ufpel
  * @copyright  2025 Your Organization
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Bootstrap variable overrides.
-// Uncomment and modify as needed for institutional branding.
-// These variables must be defined before Bootstrap is imported.
+// =============================================================================
+// UFPel Brand Color Palette
+// =============================================================================
+// Define institutional colors here for consistent branding across the platform.
+// These variables can be referenced throughout your SCSS files.
 
-// Example color scheme for UFPel (commented out to maintain Boost defaults):
-// Primary colors.
-// $primary:    #004b23;  // UFPel institutional green
-// $secondary:  #6c757d;
-// $success:    #28a745;
-// $info:       #17a2b8;
-// $warning:    #ffc107;
-// $danger:     #dc3545;
-// $light:      #f8f9fa;
-// $dark:       #343a40;
+// Primary brand colors (commented out to maintain Boost defaults).
+// $ufpel-green-primary: #004b23;        // Main institutional green
+// $ufpel-green-secondary: #6db33f;      // Secondary green accent
+// $ufpel-green-light: #a8d5a8;          // Light green for backgrounds
+// $ufpel-green-dark: #002d15;           // Dark green for text/accents
 
-// Typography.
-// $font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-// $font-size-base: 0.9375rem;
-// $line-height-base: 1.5;
+// Supporting colors.
+// $ufpel-blue: #1e3a8a;                 // Complementary blue
+// $ufpel-gray-light: #f8fafc;           // Light gray backgrounds
+// $ufpel-gray-medium: #64748b;          // Medium gray for text
+// $ufpel-gray-dark: #1e293b;            // Dark gray for headings
 
-// Spacing.
+// =============================================================================
+// Bootstrap Color System Override
+// =============================================================================
+// Override Bootstrap's default color system with institutional colors.
+// Uncomment and customize as needed for your institution.
+
+// Primary color system.
+// $primary: $ufpel-green-primary;
+// $secondary: $ufpel-gray-medium;
+// $success: #059669;                     // Green for success states
+// $info: #0ea5e9;                        // Blue for informational content
+// $warning: #d97706;                     // Orange for warnings
+// $danger: #dc2626;                      // Red for errors and dangerous actions
+// $light: $ufpel-gray-light;
+// $dark: $ufpel-gray-dark;
+
+// Additional theme colors.
+// $body-bg: #ffffff;
+// $body-color: $ufpel-gray-dark;
+
+// =============================================================================
+// Typography System
+// =============================================================================
+// Define typography settings that align with institutional brand guidelines.
+
+// Font families.
+// $font-family-sans-serif: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+// $font-family-monospace: "JetBrains Mono", "Fira Code", "Source Code Pro", Menlo, Monaco, Consolas, monospace;
+
+// Font sizes and spacing.
+// $font-size-base: 1rem;                 // 16px base font size
+// $font-size-sm: 0.875rem;               // Small text
+// $font-size-lg: 1.125rem;               // Large text
+// $line-height-base: 1.6;                // Improved readability
+// $line-height-sm: 1.4;
+// $line-height-lg: 1.8;
+
+// Heading styles.
+// $headings-margin-bottom: 1rem;
+// $headings-font-family: $font-family-sans-serif;
+// $headings-font-weight: 600;
+// $headings-line-height: 1.3;
+// $headings-color: $ufpel-gray-dark;
+
+// =============================================================================
+// Spacing and Layout
+// =============================================================================
+// Define consistent spacing and layout variables.
+
+// Base spacing unit.
 // $spacer: 1rem;
 
-// Border radius.
-// $border-radius: .25rem;
-// $border-radius-lg: .3rem;
-// $border-radius-sm: .2rem;
+// Border radius settings.
+// $border-radius: 0.5rem;                // Modern, slightly rounded corners
+// $border-radius-sm: 0.25rem;
+// $border-radius-lg: 0.75rem;
+// $border-radius-xl: 1rem;
 
-// Shadows.
-// $box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
-// $box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
-// $box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+// Border settings.
+// $border-width: 1px;
+// $border-color: #e2e8f0;
 
-// Links.
+// =============================================================================
+// Interactive Elements
+// =============================================================================
+// Settings for buttons, links, and other interactive components.
+
+// Link styling.
 // $link-color: $primary;
 // $link-decoration: none;
-// $link-hover-color: darken($link-color, 15%);
+// $link-hover-color: darken($primary, 10%);
 // $link-hover-decoration: underline;
+
+// Button settings.
+// $btn-border-radius: $border-radius;
+// $btn-font-weight: 500;
+// $btn-padding-y: 0.625rem;
+// $btn-padding-x: 1.25rem;
+
+// Form elements.
+// $input-border-radius: $border-radius;
+// $input-border-color: #d1d5db;
+// $input-focus-border-color: $primary;
+// $input-focus-box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+
+// =============================================================================
+// Component-Specific Settings
+// =============================================================================
+// Variables for specific Moodle components.
+
+// Navigation.
+// $navbar-brand-font-size: 1.25rem;
+// $navbar-padding-y: 1rem;
+
+// Cards.
+// $card-border-radius: $border-radius;
+// $card-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+// $card-cap-bg: $ufpel-gray-light;
+
+// Modals.
+// $modal-content-border-radius: $border-radius-lg;
+// $modal-header-border-color: #e5e7eb;
+
+// Tables.
+// $table-hover-bg: rgba($primary, 0.05);
+// $table-striped-bg: rgba($ufpel-gray-light, 0.5);
+
+// =============================================================================
+// Responsive Design Variables
+// =============================================================================
+// Variables for responsive design and mobile optimization.
+
+// Breakpoints (using Bootstrap 5.x standards).
+// $grid-breakpoints: (
+//     xs: 0,
+//     sm: 576px,
+//     md: 768px,
+//     lg: 992px,
+//     xl: 1200px,
+//     xxl: 1400px
+// );
+
+// Container max widths.
+// $container-max-widths: (
+//     sm: 540px,
+//     md: 720px,
+//     lg: 960px,
+//     xl: 1140px,
+//     xxl: 1320px
+// );
+
+// =============================================================================
+// Accessibility and UX Variables
+// =============================================================================
+// Variables to improve accessibility and user experience.
+
+// Focus states.
+// $focus-ring-width: 0.2rem;
+// $focus-ring-color: rgba($primary, 0.25);
+// $focus-ring-blur: 0;
+
+// Animation and transition settings.
+// $transition-base: all 0.2s ease-in-out;
+// $transition-fade: opacity 0.15s linear;
+// $transition-collapse: height 0.35s ease;
+
+// =============================================================================
+// Performance and Optimization
+// =============================================================================
+// Variables that help with performance optimization.
+
+// Enable/disable optional features.
+// $enable-shadows: true;
+// $enable-gradients: false;              // Disable gradients for better performance
+// $enable-transitions: true;
+// $enable-reduced-motion: true;          // Respect user's motion preferences
+
+// Print styles.
+// $print-page-size: a3;
+// $print-body-min-width: map-get($grid-breakpoints, lg);
+
+// =============================================================================
+// END OF VARIABLES
+// =============================================================================
+// Do not add CSS rules below this line - use post.scss for actual CSS rules.

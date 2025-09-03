@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme UFPel - Settings (Ultra Safe Version)
+ * Theme UFPel - Settings (Moodle 5.x Best Practices)
  *
  * @package    theme_ufpel
  * @copyright  2025 Your Organization
@@ -24,55 +24,103 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Safety check - only proceed if we have proper context.
-if (!isset($ADMIN) || !isset($settings)) {
+// Early exit if not in admin context or if variables not set.
+if (!isset($ADMIN, $settings) || !$ADMIN instanceof admin_root) {
     return;
 }
 
-// Only add settings if we have full tree access.
-if ($ADMIN->fulltree) {
-    
-    // Avoid any database calls or file system access during initial load.
-    // Use only static configuration.
-    
-    try {
-        // Setting 1: Preset selector with static options.
-        $name = 'theme_ufpel/preset';
-        $title = 'Theme preset';
-        $description = 'Choose a preset to change the look of the theme.';
-        $default = 'default.scss';
-        $choices = array(
-            'default.scss' => 'Boost Default',
-            'plain.scss' => 'Boost Plain'
-        );
-        
-        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $settings->add($setting);
-        
-        // Setting 2: Raw initial SCSS.
-        $name = 'theme_ufpel/scsspre';
-        $title = 'Raw initial SCSS';
-        $description = 'Initial SCSS code injected before the theme preset.';
-        $default = '';
-        
-        $setting = new admin_setting_configtextarea($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $settings->add($setting);
-        
-        // Setting 3: Raw SCSS.
-        $name = 'theme_ufpel/scss';
-        $title = 'Raw SCSS';
-        $description = 'SCSS code injected after the theme preset.';
-        $default = '';
-        
-        $setting = new admin_setting_configtextarea($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $settings->add($setting);
-        
-    } catch (Exception $e) {
-        // Silently catch any errors to prevent breaking the admin interface.
-        // Settings simply won't appear if there's an issue.
-        error_log('theme_ufpel settings error: ' . $e->getMessage());
-    }
+// Only proceed if we have full admin tree access.
+if (!$ADMIN->fulltree) {
+    return;
 }
+
+// Verify theme is properly installed.
+try {
+    $themeconfig = theme_config::load('ufpel');
+    if (!$themeconfig) {
+        return;
+    }
+} catch (Exception $e) {
+    error_log('theme_ufpel settings: Cannot load theme config - ' . $e->getMessage());
+    return;
+}
+
+// Create settings page using appropriate class for Moodle 5.x.
+if (class_exists('theme_boost_admin_settingspage_tabs')) {
+    $settings = new theme_boost_admin_settingspage_tabs('themesettingufpel', get_string('configtitle', 'theme_ufpel'));
+} else {
+    // Fallback for different Moodle versions.
+    $settings = new admin_settingspage('themesettingufpel', get_string('configtitle', 'theme_ufpel'));
+}
+
+// General settings section.
+$page = new admin_settingpage('theme_ufpel_general', get_string('generalsettings', 'theme_ufpel'));
+
+try {
+    // Preset selection setting.
+    $name = 'theme_ufpel/preset';
+    $title = get_string('preset', 'theme_ufpel');
+    $description = get_string('preset_desc', 'theme_ufpel');
+    $default = 'default.scss';
+    
+    // Define available presets - start with standard Boost presets.
+    $presetchoices = [
+        'default.scss' => 'Default',
+        'plain.scss' => 'Plain'
+    ];
+    
+    // Add any custom preset files from the theme (function is in lib.php).
+    $custompresets = theme_ufpel_get_custom_presets();
+    if (!empty($custompresets)) {
+        $presetchoices = array_merge($presetchoices, $custompresets);
+    }
+    
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $presetchoices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+    
+    // Raw initial SCSS setting.
+    $name = 'theme_ufpel/scsspre';
+    $title = get_string('rawscsspre', 'theme_ufpel');
+    $description = get_string('rawscsspre_desc', 'theme_ufpel');
+    $default = '';
+    
+    // Use appropriate SCSS setting class based on availability.
+    if (class_exists('admin_setting_scsscode')) {
+        $setting = new admin_setting_scsscode($name, $title, $description, $default, PARAM_RAW);
+    } else {
+        $setting = new admin_setting_configtextarea($name, $title, $description, $default);
+    }
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+    
+    // Raw SCSS setting.
+    $name = 'theme_ufpel/scss';
+    $title = get_string('rawscss', 'theme_ufpel');
+    $description = get_string('rawscss_desc', 'theme_ufpel');
+    $default = '';
+    
+    // Use appropriate SCSS setting class based on availability.
+    if (class_exists('admin_setting_scsscode')) {
+        $setting = new admin_setting_scsscode($name, $title, $description, $default, PARAM_RAW);
+    } else {
+        $setting = new admin_setting_configtextarea($name, $title, $description, $default);
+    }
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+} catch (Exception $e) {
+    // Log errors but don't break admin interface.
+    error_log('theme_ufpel settings error: ' . $e->getMessage());
+    
+    // Add a basic message if settings fail to load.
+    $setting = new admin_setting_heading(
+        'theme_ufpel/error',
+        get_string('error'),
+        'Settings could not be loaded. Please check the error logs for more details.'
+    );
+    $page->add($setting);
+}
+
+// Add the page to settings.
+$settings->add($page);

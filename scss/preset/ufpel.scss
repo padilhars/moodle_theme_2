@@ -14,28 +14,95 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * UFPel theme preset
+ * UFPel theme preset (Moodle 5.x Compatible)
  *
- * This preset maintains full Boost compatibility without modifications.
- * It imports Boost's default preset as a base.
+ * This preset maintains full Boost compatibility and uses the standard
+ * Boost structure for maximum compatibility across different Moodle installations.
  *
  * @package    theme_ufpel
  * @copyright  2025 Your Organization
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Import Bootstrap and FontAwesome (required for Moodle themes).
-@import "../../../../../../theme/boost/scss/fontawesome";
-@import "../../../../../../theme/boost/scss/bootstrap";
+// UFPel Brand Colors (commented out to maintain Boost defaults)
+// Uncomment and modify these variables for institutional branding
+// $ufpel-primary: #004b23;    // UFPel institutional green
+// $ufpel-secondary: #6db33f;  // Light green accent
+// $ufpel-accent: #f8f9fa;     // Light background
+// $ufpel-dark: #1a1a1a;       // Dark text/backgrounds
 
-// Import Moodle core styles.
-@import "../../../../../../theme/boost/scss/moodle";
-
-// UFPel specific variables (commented out to maintain Boost defaults).
-// Uncomment and modify as needed for customization.
-// $primary: #004b23;
-// $secondary: #6c757d;
+// Bootstrap Variable Overrides
+// These should be defined before importing Bootstrap
+// $primary: $ufpel-primary;
 // $success: #28a745;
 // $info: #17a2b8;
 // $warning: #ffc107;
 // $danger: #dc3545;
+// $light: #f8f9fa;
+// $dark: #343a40;
+
+// Typography Variables
+// $font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+// $font-size-base: 0.9375rem;
+// $line-height-base: 1.6;
+// $headings-font-weight: 500;
+
+// Layout Variables
+// $spacer: 1rem;
+// $border-radius: 0.375rem;
+// $border-radius-sm: 0.25rem;
+// $border-radius-lg: 0.5rem;
+
+// Import FontAwesome (required for Moodle icons)
+@import "theme_boost/fontawesome";
+
+// Import Bootstrap framework
+@import "theme_boost/bootstrap";
+
+// Import Moodle core styles
+@import "theme_boost/moodle";
+
+// UFPel Custom Styles
+// Add institutional customizations here while maintaining Boost compatibility
+
+// Example: Custom navigation styles (commented out)
+// .navbar {
+//     background: linear-gradient(135deg, $primary 0%, lighten($primary, 10%) 100%);
+//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+// }
+
+// Example: Custom course card hover effects (commented out)
+// .course-card {
+//     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+//     
+//     &:hover {
+//         transform: translateY(-4px);
+//         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+//     }
+// }
+
+// Example: Enhanced button styles (commented out)
+// .btn-primary {
+//     background: linear-gradient(135deg, $primary 0%, darken($primary, 5%) 100%);
+//     border: none;
+//     font-weight: 500;
+//     letter-spacing: 0.025em;
+//     transition: all 0.2s ease;
+//     
+//     &:hover {
+//         transform: translateY(-1px);
+//         box-shadow: 0 4px 12px rgba($primary, 0.3);
+//     }
+// }
+
+// Example: Modern form styling (commented out)
+// .form-control {
+//     border-radius: $border-radius;
+//     border: 2px solid #e9ecef;
+//     transition: border-color 0.2s ease;
+//     
+//     &:focus {
+//         border-color: $primary;
+//         box-shadow: 0 0 0 0.2rem rgba($primary, 0.15);
+//     }
+// }

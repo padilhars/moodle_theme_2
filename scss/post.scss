@@ -14,45 +14,308 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Post-SCSS for theme_ufpel
+ * Post-SCSS for theme_ufpel (Moodle 5.x Optimized)
  *
- * This file is loaded AFTER the preset file.
- * It should contain custom styles that override or extend the preset styles.
- * This is where you add your institutional customizations.
+ * This file contains custom CSS rules and overrides that are applied AFTER
+ * the main preset has been processed. This is where institutional customizations,
+ * component overrides, and additional styling should be implemented.
+ *
+ * STRUCTURE:
+ * - Utility classes and mixins
+ * - Global overrides
+ * - Navigation customizations
+ * - Content area styling
+ * - Course and activity styling
+ * - User interface enhancements
+ * - Responsive design rules
+ * - Accessibility improvements
+ * - Print styles
  *
  * @package    theme_ufpel
  * @copyright  2025 Your Organization
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Custom styles for UFPel theme.
-// Currently empty to maintain full Boost compatibility.
-// Add your customizations below as needed.
+// =============================================================================
+// UTILITY MIXINS AND FUNCTIONS
+// =============================================================================
+// Define reusable mixins and functions for consistent styling.
 
-// Example customizations (commented out):
-
-// Custom header styles.
-// .navbar {
-//     box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
-// }
-
-// Custom course card styles.
-// .course-card {
-//     transition: transform 0.3s ease;
-//     &:hover {
-//         transform: translateY(-2px);
-//         box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+// Example: Modern box shadow mixin (commented out).
+// @mixin modern-shadow($level: 1) {
+//     @if $level == 1 {
+//         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+//     } @else if $level == 2 {
+//         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+//     } @else if $level == 3 {
+//         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 //     }
 // }
 
-// Custom button styles.
-// .btn-primary {
-//     font-weight: 500;
-//     letter-spacing: 0.02em;
+// Example: Smooth transitions mixin (commented out).
+// @mixin smooth-transition($properties: all, $duration: 0.2s, $easing: ease-in-out) {
+//     transition: $properties $duration $easing;
+//     will-change: $properties;
 // }
 
-// Custom footer styles.
-// #page-footer {
-//     border-top: 1px solid rgba(0, 0, 0, .1);
-//     padding: 2rem 0;
+// =============================================================================
+// GLOBAL OVERRIDES AND IMPROVEMENTS
+// =============================================================================
+// Global styling improvements that enhance the base Boost theme.
+
+// Currently maintaining full Boost compatibility.
+// Add global customizations here as needed.
+
+// Example: Improved focus styles for better accessibility (commented out).
+// *:focus {
+//     outline: 2px solid var(--bs-primary);
+//     outline-offset: 2px;
 // }
+
+// Example: Smooth scrolling for modern browsers (commented out).
+// html {
+//     scroll-behavior: smooth;
+// }
+
+// =============================================================================
+// NAVIGATION CUSTOMIZATIONS
+// =============================================================================
+// Enhancements to navigation components.
+
+// Example: Enhanced navbar styling (commented out).
+// .navbar {
+//     @include modern-shadow(1);
+//     backdrop-filter: blur(10px);
+//     background: rgba(255, 255, 255, 0.95);
+//     
+//     .navbar-brand {
+//         font-weight: 600;
+//         @include smooth-transition(color);
+//     }
+//     
+//     .nav-link {
+//         @include smooth-transition(color);
+//         font-weight: 500;
+//         
+//         &:hover {
+//             color: var(--bs-primary);
+//         }
+//     }
+// }
+
+// Example: Breadcrumb improvements (commented out).
+// .breadcrumb {
+//     background: transparent;
+//     padding: 0.75rem 0;
+//     
+//     .breadcrumb-item {
+//         + .breadcrumb-item::before {
+//             color: var(--bs-gray-500);
+//         }
+//     }
+// }
+
+// =============================================================================
+// CONTENT AREA STYLING
+// =============================================================================
+// Improvements to main content areas and typography.
+
+// Example: Enhanced content typography (commented out).
+// .content-wrapper {
+//     h1, h2, h3, h4, h5, h6 {
+//         font-weight: 600;
+//         line-height: 1.3;
+//         margin-bottom: 1rem;
+//     }
+//     
+//     p {
+//         line-height: 1.7;
+//         margin-bottom: 1.25rem;
+//     }
+// }
+
+// Example: Improved card styling (commented out).
+// .card {
+//     @include modern-shadow(1);
+//     @include smooth-transition(box-shadow, transform);
+//     border: 1px solid rgba(0, 0, 0, 0.08);
+//     
+//     &:hover {
+//         @include modern-shadow(2);
+//         transform: translateY(-2px);
+//     }
+// }
+
+// =============================================================================
+// COURSE AND ACTIVITY STYLING
+// =============================================================================
+// Enhancements specific to course content and activities.
+
+// Example: Course card improvements (commented out).
+// .course-card {
+//     @include modern-shadow(1);
+//     @include smooth-transition(all);
+//     overflow: hidden;
+//     
+//     &:hover {
+//         @include modern-shadow(3);
+//         transform: translateY(-4px);
+//     }
+//     
+//     .course-card-body {
+//         padding: 1.5rem;
+//     }
+//     
+//     .course-card-title {
+//         font-weight: 600;
+//         font-size: 1.1rem;
+//         margin-bottom: 0.75rem;
+//     }
+// }
+
+// Example: Activity module styling (commented out).
+// .activity {
+//     .mod-indent {
+//         border-left: 3px solid var(--bs-primary);
+//         padding-left: 1rem;
+//     }
+//     
+//     .activity-item {
+//         @include smooth-transition(background-color);
+//         padding: 0.75rem;
+//         border-radius: 0.5rem;
+//         
+//         &:hover {
+//             background-color: rgba(var(--bs-primary-rgb), 0.05);
+//         }
+//     }
+// }
+
+// =============================================================================
+// USER INTERFACE ENHANCEMENTS
+// =============================================================================
+// Improvements to buttons, forms, and other UI elements.
+
+// Example: Enhanced button styling (commented out).
+// .btn {
+//     @include smooth-transition(all);
+//     font-weight: 500;
+//     border-radius: 0.5rem;
+//     
+//     &.btn-primary {
+//         background: linear-gradient(135deg, var(--bs-primary) 0%, #{darken(var(--bs-primary), 5%)} 100%);
+//         border: none;
+//         
+//         &:hover {
+//             transform: translateY(-1px);
+//             box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.3);
+//         }
+//         
+//         &:active {
+//             transform: translateY(0);
+//         }
+//     }
+// }
+
+// Example: Form improvements (commented out).
+// .form-control {
+//     @include smooth-transition(border-color, box-shadow);
+//     border-radius: 0.5rem;
+//     border: 2px solid #e5e7eb;
+//     
+//     &:focus {
+//         border-color: var(--bs-primary);
+//         box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+//     }
+// }
+
+// =============================================================================
+// RESPONSIVE DESIGN RULES
+// =============================================================================
+// Mobile-first responsive design improvements.
+
+// Example: Mobile navigation improvements (commented out).
+// @media (max-width: 767.98px) {
+//     .navbar-toggler {
+//         border: none;
+//         padding: 0.5rem;
+//         
+//         &:focus {
+//             box-shadow: none;
+//         }
+//     }
+//     
+//     .navbar-collapse {
+//         margin-top: 1rem;
+//         padding-top: 1rem;
+//         border-top: 1px solid rgba(0, 0, 0, 0.1);
+//     }
+// }
+
+// Example: Tablet optimizations (commented out).
+// @media (min-width: 768px) and (max-width: 991.98px) {
+//     .container {
+//         max-width: 95%;
+//     }
+// }
+
+// =============================================================================
+// ACCESSIBILITY IMPROVEMENTS
+// =============================================================================
+// Enhancements for better accessibility compliance.
+
+// Example: High contrast mode support (commented out).
+// @media (prefers-contrast: high) {
+//     .btn-primary {
+//         background: var(--bs-dark);
+//         border-color: var(--bs-dark);
+//     }
+//     
+//     .card {
+//         border-color: var(--bs-dark);
+//     }
+// }
+
+// Example: Reduced motion support (commented out).
+// @media (prefers-reduced-motion: reduce) {
+//     *, *::before, *::after {
+//         animation-duration: 0.01ms !important;
+//         animation-iteration-count: 1 !important;
+//         transition-duration: 0.01ms !important;
+//         scroll-behavior: auto !important;
+//     }
+// }
+
+// =============================================================================
+// PRINT STYLES
+// =============================================================================
+// Optimizations for print media.
+
+// Example: Print-specific styling (commented out).
+// @media print {
+//     .navbar,
+//     .sidebar,
+//     .btn,
+//     .page-footer {
+//         display: none !important;
+//     }
+//     
+//     .container {
+//         max-width: none;
+//         padding: 0;
+//     }
+//     
+//     .content-wrapper {
+//         margin: 0;
+//         padding: 0;
+//     }
+// }
+
+// =============================================================================
+// THEME-SPECIFIC CUSTOMIZATIONS
+// =============================================================================
+// Add your institutional customizations below this line.
+// Remember to follow the established patterns and maintain accessibility.
+
+// Currently empty to maintain full Boost compatibility.
+// This section is ready for your institutional styling requirements.
