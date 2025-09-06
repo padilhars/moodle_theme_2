@@ -1,0 +1,242 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_ufpel/core/course_header
+
+    Template do cabeçalho personalizado do curso para o tema UFPel.
+    
+    Este template renderiza um cabeçalho atrativo para páginas de curso,
+    incluindo imagem de capa (quando disponível) e informações do curso.
+    
+    Variáveis do contexto:
+    * courseid - ID do curso
+    * coursename - Nome completo do curso
+    * courseshortname - Nome abreviado do curso
+    * courseimage - URL da imagem de capa do curso (opcional)
+    * courseurl - URL do curso
+    * enablecourseheader - Flag para habilitar/desabilitar o cabeçalho customizado
+
+    Classes de exemplo: course-header, course-header-image, course-header-content, course-title
+
+    @package theme_ufpel
+    @copyright 2025 Universidade Federal de Pelotas
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+{{#enablecourseheader}}
+{{#courseid}}
+<div class="course-header {{^courseimage}}no-image{{/courseimage}}" role="banner" aria-label="{{#str}}courseheader, theme_ufpel{{/str}}">
+    
+    {{! Imagem de capa do curso (se disponível) }}
+    {{#courseimage}}
+    <img src="{{courseimage}}" 
+         alt="{{#str}}coursecoverimage, theme_ufpel{{/str}}: {{coursename}}" 
+         class="course-header-image"
+         loading="lazy"
+         decoding="async">
+    {{/courseimage}}
+    
+    {{! Conteúdo do cabeçalho com informações do curso }}
+    <div class="course-header-content">
+        
+        {{! Navegação estruturada para acessibilidade }}
+        <nav aria-label="{{#str}}courseinfo, theme_ufpel{{/str}}" class="sr-only">
+            <a href="#main-content" class="skip-link">{{#str}}skiptomaincontent, theme_ufpel{{/str}}</a>
+        </nav>
+        
+        {{! Título principal do curso }}
+        <h1 class="course-title" id="course-title">
+            <a href="{{courseurl}}" 
+               class="text-decoration-none text-inherit"
+               title="{{#str}}gotocourse, theme_ufpel{{/str}}: {{coursename}}"
+               aria-describedby="course-subtitle">
+                {{coursename}}
+            </a>
+        </h1>
+        
+        {{! Subtítulo com nome abreviado (se diferente do nome completo) }}
+        {{#courseshortname}}
+        {{^coursenameshort_equals_fullname}}
+        <p class="course-subtitle" id="course-subtitle">
+            {{courseshortname}}
+        </p>
+        {{/coursenameshort_equals_fullname}}
+        {{/courseshortname}}
+        
+        {{! Informações adicionais do curso }}
+        <div class="course-meta d-flex flex-wrap gap-3 mt-3" aria-label="{{#str}}courseinfo, theme_ufpel{{/str}}">
+            
+            {{! Badge do ID do curso }}
+            <span class="badge bg-light text-dark" title="{{#str}}courseid, core{{/str}}">
+                <i class="fa fa-id-badge me-1" aria-hidden="true"></i>
+                <span class="sr-only">{{#str}}courseid, core{{/str}}: </span>
+                {{courseid}}
+            </span>
+            
+            {{! Contador de participantes (se disponível) }}
+            {{#participantcount}}
+            <span class="badge bg-info" title="{{#str}}participants, core{{/str}}">
+                <i class="fa fa-users me-1" aria-hidden="true"></i>
+                <span class="sr-only">{{#str}}participants, core{{/str}}: </span>
+                {{participantcount}}
+            </span>
+            {{/participantcount}}
+            
+            {{! Categoria do curso (se disponível) }}
+            {{#categoryname}}
+            <span class="badge bg-secondary" title="{{#str}}category, core{{/str}}">
+                <i class="fa fa-folder me-1" aria-hidden="true"></i>
+                <span class="sr-only">{{#str}}category, core{{/str}}: </span>
+                {{categoryname}}
+            </span>
+            {{/categoryname}}
+        </div>
+    </div>
+    
+    {{! Overlay de gradiente para melhor legibilidade do texto sobre imagem }}
+    {{#courseimage}}
+    <div class="course-header-overlay" aria-hidden="true"></div>
+    {{/courseimage}}
+</div>
+
+{{! Separador visual }}
+<div class="course-header-separator mb-4" aria-hidden="true">
+    <div class="container-fluid">
+        <hr class="border-ufpel-primary opacity-25">
+    </div>
+</div>
+{{/courseid}}
+{{/enablecourseheader}}
+
+{{! Versão simplificada para quando o cabeçalho customizado está desabilitado }}
+{{^enablecourseheader}}
+{{#courseid}}
+<div class="course-header-simple py-3 mb-4 bg-light" role="banner">
+    <div class="container-fluid">
+        <h1 class="h3 mb-0 text-ufpel-primary">
+            <a href="{{courseurl}}" 
+               class="text-decoration-none"
+               title="{{#str}}gotocourse, theme_ufpel{{/str}}: {{coursename}}">
+                {{coursename}}
+            </a>
+        </h1>
+        {{#courseshortname}}
+        {{^coursenameshort_equals_fullname}}
+        <p class="text-muted mb-0 small">{{courseshortname}}</p>
+        {{/coursenameshort_equals_fullname}}
+        {{/courseshortname}}
+    </div>
+</div>
+{{/courseid}}
+{{/enablecourseheader}}
+
+{{! CSS específico inline para garantir funcionalidade mesmo se SCSS não estiver carregado }}
+<style>
+.course-header {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+}
+
+.course-header.no-image {
+    background: linear-gradient(135deg, #00408F 0%, #0080FF 100%);
+    color: white;
+}
+
+.course-header-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.course-header-content {
+    position: relative;
+    padding: 2rem;
+    z-index: 2;
+}
+
+.course-header:not(.no-image) .course-header-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+}
+
+.course-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.course-subtitle {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0.5rem 0 0 0;
+}
+
+@media (max-width: 768px) {
+    .course-header-image {
+        height: 150px;
+    }
+    
+    .course-header-content {
+        padding: 1rem;
+    }
+    
+    .course-title {
+        font-size: 1.5rem;
+    }
+}
+
+.text-inherit {
+    color: inherit !important;
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #00408F;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 9999;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+</style>

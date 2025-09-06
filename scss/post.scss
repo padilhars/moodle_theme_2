@@ -1,0 +1,385 @@
+/*!
+ * Tema UFPel - SCSS Pós-processamento
+ * 
+ * Este arquivo contém os estilos finais e ajustes específicos
+ * do tema UFPel aplicados após o preset principal.
+ * Inclui overrides, customizações e melhorias de acessibilidade.
+ *
+ * @package    theme_ufpel
+ * @copyright  2025 Universidade Federal de Pelotas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// ========================================================================
+// ESTILOS GLOBAIS UFPel
+// ========================================================================
+
+body {
+  font-family: $font-family-base;
+  line-height: 1.6;
+  @include ufpel-transition(all);
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DA NAVBAR
+// ========================================================================
+
+.navbar {
+  background: linear-gradient(135deg, $ufpel-primary 0%, $ufpel-secondary 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  .navbar-brand {
+    font-weight: $font-weight-bold;
+    color: $ufpel-highlight-text !important;
+    @include ufpel-transition(transform);
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    img {
+      max-height: $navbar-brand-height;
+      width: auto;
+      @include ufpel-transition(opacity);
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+  
+  .navbar-nav {
+    .nav-link {
+      color: rgba($ufpel-highlight-text, 0.9) !important;
+      font-weight: $font-weight-normal;
+      @include ufpel-transition(color);
+      @include ufpel-focus-shadow($ufpel-highlight-text);
+      
+      &:hover,
+      &:focus {
+        color: $ufpel-highlight-text !important;
+      }
+      
+      &.active {
+        color: $ufpel-accent !important;
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DO CABEÇALHO DO CURSO
+// ========================================================================
+
+.course-header {
+  position: relative;
+  background: $ufpel-background;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: $box-shadow-lg;
+  
+  .course-header-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    filter: brightness(0.8);
+    @include ufpel-transition(filter);
+    
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+  
+  .course-header-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 2rem;
+    color: $ufpel-highlight-text;
+    
+    .course-title {
+      font-size: 2rem;
+      font-weight: $font-weight-bold;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      @include ufpel-text-truncate;
+      
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    }
+    
+    .course-subtitle {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+    }
+  }
+  
+  // Fallback quando não há imagem de curso
+  &.no-image {
+    background: $ufpel-primary;
+    
+    .course-header-content {
+      position: static;
+      background: transparent;
+    }
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE CARDS E CONTAINERS
+// ========================================================================
+
+.card {
+  border: $card-border-width solid $card-border-color;
+  border-radius: $card-border-radius;
+  box-shadow: $card-box-shadow;
+  @include ufpel-transition(all);
+  
+  &:hover {
+    box-shadow: $box-shadow-lg;
+    transform: translateY(-2px);
+  }
+  
+  .card-header {
+    background: rgba($ufpel-primary, 0.05);
+    border-bottom: 1px solid rgba($ufpel-primary, 0.1);
+    font-weight: $font-weight-semibold;
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE BOTÕES
+// ========================================================================
+
+.btn {
+  border-radius: $btn-border-radius;
+  font-weight: $btn-font-weight;
+  @include ufpel-transition(all);
+  @include ufpel-focus-shadow();
+  
+  // Botão primário UFPel
+  &.btn-primary {
+    background: $ufpel-primary;
+    border-color: $ufpel-primary;
+    
+    &:hover,
+    &:focus {
+      background: darken($ufpel-primary, 10%);
+      border-color: darken($ufpel-primary, 10%);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Botão secundário UFPel
+  &.btn-secondary {
+    background: $ufpel-secondary;
+    border-color: $ufpel-secondary;
+    
+    &:hover,
+    &:focus {
+      background: darken($ufpel-secondary, 10%);
+      border-color: darken($ufpel-secondary, 10%);
+    }
+  }
+  
+  // Botão de destaque UFPel
+  &.btn-warning {
+    background: $ufpel-accent;
+    border-color: $ufpel-accent;
+    color: $ufpel-text;
+    
+    &:hover,
+    &:focus {
+      background: darken($ufpel-accent, 10%);
+      border-color: darken($ufpel-accent, 10%);
+    }
+  }
+}
+
+// ========================================================================
+// MELHORIAS DE ACESSIBILIDADE
+// ========================================================================
+
+// Foco visível aprimorado
+*:focus,
+*:focus-visible {
+  outline: 2px solid $ufpel-primary;
+  outline-offset: 2px;
+}
+
+// Skip links para navegação por teclado
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: $ufpel-primary;
+  color: $ufpel-highlight-text;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: $border-radius;
+  z-index: 9999;
+  
+  &:focus {
+    top: 6px;
+  }
+}
+
+// Contraste aprimorado para texto
+.text-muted {
+  color: lighten($ufpel-text, 20%) !important;
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE LINKS
+// ========================================================================
+
+a {
+  color: $link-color;
+  text-decoration: $link-decoration;
+  @include ufpel-transition(color);
+  
+  &:hover,
+  &:focus {
+    color: $link-hover-color;
+    text-decoration: $link-hover-decoration;
+  }
+  
+  // Links em contexto escuro
+  .bg-dark &,
+  .navbar & {
+    color: $ufpel-highlight-text;
+    
+    &:hover,
+    &:focus {
+      color: $ufpel-accent;
+    }
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DA SIDEBAR E BLOCOS
+// ========================================================================
+
+.block {
+  background: $ufpel-highlight-text;
+  border: 1px solid rgba($ufpel-primary, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  
+  .block-header {
+    background: rgba($ufpel-primary, 0.05);
+    border-bottom: 1px solid rgba($ufpel-primary, 0.1);
+    padding: 1rem;
+    
+    .block-title {
+      color: $ufpel-primary;
+      font-weight: $font-weight-semibold;
+      margin: 0;
+    }
+  }
+  
+  .block-content {
+    padding: 1rem;
+  }
+}
+
+// ========================================================================
+// RESPONSIVIDADE E MOBILE
+// ========================================================================
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+  
+  .course-header {
+    margin-bottom: 1rem;
+    
+    .course-header-image {
+      height: 150px;
+    }
+    
+    .course-header-content {
+      padding: 1rem;
+    }
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE FORMULÁRIOS
+// ========================================================================
+
+.form-control {
+  border: 1px solid rgba($ufpel-primary, 0.2);
+  border-radius: $border-radius;
+  @include ufpel-transition(border-color);
+  @include ufpel-focus-shadow();
+  
+  &:focus {
+    border-color: $ufpel-primary;
+    box-shadow: 0 0 0 0.2rem rgba($ufpel-primary, 0.25);
+  }
+}
+
+.form-label {
+  font-weight: $font-weight-semibold;
+  color: $ufpel-text;
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE ALERTAS E NOTIFICAÇÕES
+// ========================================================================
+
+.alert {
+  border-radius: $border-radius;
+  border: none;
+  
+  &.alert-primary {
+    background: rgba($ufpel-primary, 0.1);
+    color: $ufpel-primary;
+  }
+  
+  &.alert-warning {
+    background: rgba($ufpel-accent, 0.1);
+    color: darken($ufpel-accent, 30%);
+  }
+}
+
+// ========================================================================
+// UTILITÁRIOS PERSONALIZADOS UFPel
+// ========================================================================
+
+.ufpel-gradient {
+  @include ufpel-gradient();
+}
+
+.ufpel-shadow {
+  box-shadow: $box-shadow-lg;
+}
+
+.ufpel-border {
+  border: 2px solid $ufpel-primary;
+}
+
+// Classes para cores institucionais
+.text-ufpel-primary { color: $ufpel-primary !important; }
+.text-ufpel-secondary { color: $ufpel-secondary !important; }
+.text-ufpel-accent { color: $ufpel-accent !important; }
+
+.bg-ufpel-primary { background-color: $ufpel-primary !important; }
+.bg-ufpel-secondary { background-color: $ufpel-secondary !important; }
+.bg-ufpel-accent { background-color: $ufpel-accent !important; }

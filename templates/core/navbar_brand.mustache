@@ -1,0 +1,176 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_ufpel/core/navbar_brand
+
+    Template da marca/logo personalizado para o tema UFPel.
+    
+    Este template substitui o navbar_brand padrão do Boost
+    com o logotipo institucional da UFPel configurado no
+    painel administrativo.
+    
+    Variáveis do contexto:
+    * ufpel_logo - URL do logotipo personalizado (se configurado)
+    * sitename - Nome do site
+    * siteurl - URL da página inicial
+    * homeurl - URL da home
+    * logoalt - Texto alternativo para o logo
+
+    Classes de exemplo: navbar-brand, ufpel-logo
+
+    @package theme_ufpel
+    @copyright 2025 Universidade Federal de Pelotas
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<a class="navbar-brand d-flex align-items-center me-auto" 
+   href="{{homeurl}}"
+   title="{{#str}}home{{/str}}: {{sitename}}"
+   aria-label="{{#str}}brandlogo, theme_ufpel{{/str}}: {{sitename}}">
+   
+    {{! Logotipo personalizado UFPel (se configurado) }}
+    {{#ufpel_logo}}
+    <img src="{{ufpel_logo}}" 
+         alt="{{sitename}}" 
+         class="ufpel-logo me-2"
+         height="40"
+         loading="eager"
+         decoding="sync"
+         aria-hidden="false">
+    {{/ufpel_logo}}
+    
+    {{! Fallback para texto quando não há logo personalizado }}
+    {{^ufpel_logo}}
+    <div class="ufpel-brand-text d-flex align-items-center">
+        {{! Ícone UFPel como fallback }}
+        <i class="fa fa-university me-2 text-warning" aria-hidden="true"></i>
+        
+        {{! Nome do site }}
+        <span class="ufpel-site-name">{{sitename}}</span>
+    </div>
+    {{/ufpel_logo}}
+    
+    {{! Texto do site sempre visível para acessibilidade em telas grandes }}
+    {{#ufpel_logo}}
+    <span class="ufpel-site-name d-none d-lg-inline ms-2">{{sitename}}</span>
+    {{/ufpel_logo}}
+</a>
+
+{{! CSS específico inline para garantir funcionalidade }}
+<style>
+.navbar-brand {
+    font-weight: bold;
+    color: white !important;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    padding: 0.5rem 0;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+    color: #F7A600 !important;
+    text-decoration: none;
+    transform: scale(1.02);
+}
+
+.ufpel-logo {
+    max-height: 40px;
+    width: auto;
+    transition: opacity 0.2s ease-in-out;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ufpel-logo:hover {
+    opacity: 0.9;
+}
+
+.ufpel-brand-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.ufpel-site-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .ufpel-logo {
+        max-height: 32px;
+    }
+    
+    .ufpel-site-name {
+        font-size: 1rem;
+        max-width: 150px;
+    }
+    
+    .ufpel-brand-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .ufpel-site-name.d-none.d-lg-inline {
+        display: none !important;
+    }
+}
+
+/* Melhorias de acessibilidade */
+.navbar-brand:focus {
+    outline: 2px solid #F7A600;
+    outline-offset: 2px;
+}
+
+/* Alto contraste para usuários com necessidades especiais */
+@media (prefers-contrast: high) {
+    .navbar-brand {
+        border: 1px solid currentColor;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+    
+    .ufpel-logo {
+        filter: contrast(1.2);
+    }
+}
+
+/* Redução de movimento para usuários sensíveis */
+@media (prefers-reduced-motion: reduce) {
+    .navbar-brand,
+    .ufpel-logo {
+        transition: none;
+    }
+    
+    .navbar-brand:hover {
+        transform: none;
+    }
+}
+
+/* Modo escuro (preparação futura) */
+@media (prefers-color-scheme: dark) {
+    .ufpel-logo {
+        filter: brightness(0.9);
+    }
+}
+</style>

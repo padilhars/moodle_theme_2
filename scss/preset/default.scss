@@ -1,0 +1,240 @@
+/*!
+ * Tema UFPel - Preset Padrão
+ * 
+ * Este arquivo define o preset padrão do tema UFPel,
+ * incluindo importações do Bootstrap e configurações base.
+ * Serve como base para outros presets personalizados.
+ *
+ * @package    theme_ufpel
+ * @copyright  2025 Universidade Federal de Pelotas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// ========================================================================
+// IMPORTAÇÕES DO BOOTSTRAP E BOOST
+// ========================================================================
+
+// Importa o preset padrão do tema Boost (base Bootstrap)
+@import "../../boost/scss/preset/default";
+
+// ========================================================================
+// CONFIGURAÇÕES ESPECÍFICAS DO PRESET UFPel
+// ========================================================================
+
+// Sobrescreve variáveis do Bootstrap com valores UFPel
+$enable-rounded: true !default;
+$enable-shadows: true !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-reduced-motion: true !default;
+$enable-smooth-scroll: true !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE GRID E LAYOUT
+// ========================================================================
+
+// Grid system personalizado
+$grid-columns: 12 !default;
+$grid-gutter-width: 1.5rem !default;
+$grid-row-columns: 6 !default;
+
+// Container
+$container-padding-x: $grid-gutter-width * 0.5 !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE COMPONENTES BOOTSTRAP
+// ========================================================================
+
+// Navbar
+$navbar-padding-y: 1rem !default;
+$navbar-padding-x: null !default;
+$navbar-nav-link-padding-x: 1rem !default;
+$navbar-brand-margin-end: 1rem !default;
+
+// Cards
+$card-spacer-y: 1rem !default;
+$card-spacer-x: 1rem !default;
+$card-title-spacer-y: 0.5rem !default;
+$card-cap-padding-y: 0.75rem !default;
+$card-cap-padding-x: 1rem !default;
+$card-height: null !default;
+
+// Buttons
+$btn-padding-y: 0.5rem !default;
+$btn-padding-x: 1rem !default;
+$btn-font-family: null !default;
+$btn-font-size: $font-size-base !default;
+$btn-line-height: $line-height-base !default;
+$btn-white-space: null !default;
+
+// Forms
+$form-label-margin-bottom: 0.5rem !default;
+$form-label-font-size: null !default;
+$form-label-font-style: null !default;
+$form-label-font-weight: $font-weight-semibold !default;
+$form-label-color: null !default;
+
+$input-padding-y: 0.5rem !default;
+$input-padding-x: 0.75rem !default;
+$input-font-family: null !default;
+$input-font-size: $font-size-base !default;
+$input-font-weight: $font-weight-normal !default;
+$input-line-height: $line-height-base !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE TIPOGRAFIA
+// ========================================================================
+
+// Headings
+$h1-font-size: $font-size-base * 2.5 !default;
+$h2-font-size: $font-size-base * 2 !default;
+$h3-font-size: $font-size-base * 1.75 !default;
+$h4-font-size: $font-size-base * 1.5 !default;
+$h5-font-size: $font-size-base * 1.25 !default;
+$h6-font-size: $font-size-base !default;
+
+$headings-margin-bottom: 0.5rem !default;
+$headings-font-family: null !default;
+$headings-font-style: null !default;
+$headings-font-weight: $font-weight-bold !default;
+$headings-line-height: 1.2 !default;
+$headings-color: $ufpel-primary !default;
+
+// Display headings
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 4rem,
+  4: 3.5rem,
+  5: 3rem,
+  6: 2.5rem
+) !default;
+
+$display-font-family: null !default;
+$display-font-style: null !default;
+$display-font-weight: $font-weight-light !default;
+$display-line-height: $headings-line-height !default;
+
+// Lead text
+$lead-font-size: $font-size-base * 1.25 !default;
+$lead-font-weight: $font-weight-normal !default;
+
+// Small text
+$small-font-size: 0.875em !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE CORES DE ESTADO
+// ========================================================================
+
+// Success
+$success: #28a745 !default;
+$success-rgb: to-rgb($success) !default;
+
+// Info
+$info: $ufpel-secondary !default;
+$info-rgb: to-rgb($info) !default;
+
+// Warning
+$warning: $ufpel-accent !default;
+$warning-rgb: to-rgb($warning) !default;
+
+// Danger
+$danger: #dc3545 !default;
+$danger-rgb: to-rgb($danger) !default;
+
+// Light
+$light: #f8f9fa !default;
+$light-rgb: to-rgb($light) !default;
+
+// Dark
+$dark: #343a40 !default;
+$dark-rgb: to-rgb($dark) !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE UTILIDADES
+// ========================================================================
+
+$utilities: (
+  "ufpel-color": (
+    property: color,
+    class: text-ufpel,
+    local-vars: (
+      "text-opacity": 1
+    ),
+    values: (
+      "primary": rgba(var(--bs-ufpel-primary-rgb), var(--bs-text-opacity)),
+      "secondary": rgba(var(--bs-ufpel-secondary-rgb), var(--bs-text-opacity)),
+      "accent": rgba(var(--bs-ufpel-accent-rgb), var(--bs-text-opacity))
+    )
+  ),
+  "ufpel-bg": (
+    property: background-color,
+    class: bg-ufpel,
+    local-vars: (
+      "bg-opacity": 1
+    ),
+    values: (
+      "primary": rgba(var(--bs-ufpel-primary-rgb), var(--bs-bg-opacity)),
+      "secondary": rgba(var(--bs-ufpel-secondary-rgb), var(--bs-bg-opacity)),
+      "accent": rgba(var(--bs-ufpel-accent-rgb), var(--bs-bg-opacity))
+    )
+  )
+) !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE ACCESSIBILIDADE
+// ========================================================================
+
+// Focus ring
+$focus-ring-width: 0.25rem !default;
+$focus-ring-opacity: 0.25 !default;
+$focus-ring-color: rgba($ufpel-primary, $focus-ring-opacity) !default;
+$focus-ring-blur: 0 !default;
+$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE MOTION E ANIMAÇÃO
+// ========================================================================
+
+$enable-transitions: true !default;
+$transition-base: all 0.2s ease-in-out !default;
+$transition-fade: opacity 0.15s linear !default;
+$transition-collapse: height 0.35s ease !default;
+
+// ========================================================================
+// VARIÁVEIS CSS CUSTOMIZADAS (CSS Custom Properties)
+// ========================================================================
+
+:root {
+  // Cores UFPel como CSS Custom Properties
+  --bs-ufpel-primary: #{$ufpel-primary};
+  --bs-ufpel-primary-rgb: #{to-rgb($ufpel-primary)};
+  --bs-ufpel-secondary: #{$ufpel-secondary};
+  --bs-ufpel-secondary-rgb: #{to-rgb($ufpel-secondary)};
+  --bs-ufpel-accent: #{$ufpel-accent};
+  --bs-ufpel-accent-rgb: #{to-rgb($ufpel-accent)};
+  --bs-ufpel-background: #{$ufpel-background};
+  --bs-ufpel-text: #{$ufpel-text};
+  --bs-ufpel-highlight-text: #{$ufpel-highlight-text};
+  
+  // Fontes
+  --bs-ufpel-font-family: #{$font-family-base};
+  
+  // Espaçamentos
+  --bs-ufpel-navbar-height: #{$navbar-brand-height};
+  --bs-ufpel-border-radius: #{$border-radius};
+}
+
+// ========================================================================
+// MODO ESCURO (PREPARAÇÃO PARA FUTURAS VERSÕES)
+// ========================================================================
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Ajustes de cores para modo escuro
+    --bs-ufpel-background: #1a1a2e;
+    --bs-ufpel-text: #e0e0e0;
+    --bs-body-bg: var(--bs-ufpel-background);
+    --bs-body-color: var(--bs-ufpel-text);
+  }
+}
