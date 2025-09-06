@@ -28,25 +28,27 @@
 defined('MOODLE_INTERNAL') || die();
 
 // Versão do plugin (formato: YYYYMMDDXX onde XX é o release do dia)
-$plugin->version   = 2025090500;
+$plugin->version   = 2025090600;
 
 // Versão mínima do Moodle requerida (Moodle 5.0)
-$plugin->requires  = 2024042200;
+$plugin->requires  = 2024100700; // Moodle 5.0 release
 
 // Nome do componente
 $plugin->component = 'theme_ufpel';
 
 // Dependências - requer o tema Boost
 $plugin->dependencies = [
-    'theme_boost' => 2024042200
+    'theme_boost' => 2024100700
 ];
 
 // Versão para usuários (formato legível)
-$plugin->release = '1.0.0';
+$plugin->release = '1.0.1';
 
 // Nível de maturidade do plugin
-// MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC, MATURITY_STABLE
 $plugin->maturity = MATURITY_STABLE;
 
 // Compatibilidade com versões do Moodle
 $plugin->supported = [50, 51]; // Suporta Moodle 5.0 e 5.1
+
+// Informações adicionais do plugin para o Moodle 5.x
+$plugin->codeincrement = '001';

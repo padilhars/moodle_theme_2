@@ -33,10 +33,10 @@ $THEME->name = 'ufpel';
 // Tema pai - herda integralmente do Boost
 $THEME->parents = ['boost'];
 
-// Folhas de estilo - utiliza o sistema de SCSS do Moodle 5.x
+// Folhas de estilo - removido pois utilizamos SCSS
 $THEME->sheets = [];
 
-// Configuração de SCSS - utiliza o pipeline padrão do Moodle
+// Configuração de SCSS - utiliza o pipeline padrão do Moodle 5.x
 $THEME->scss = function($theme) {
     return theme_ufpel_get_main_scss_content($theme);
 };
@@ -50,24 +50,21 @@ $THEME->parents_exclude_sheets = [];
 // Plugins suportados - herda do Boost
 $THEME->plugins_exclude_sheets = [];
 
-// Layouts - herda todos os layouts do tema Boost
+// Layouts - herda todos os layouts do tema Boost para compatibilidade Moodle 5.x
 $THEME->layouts = [];
 
-// Configurações de renderização
+// Configurações de renderização - corrigido para Moodle 5.x
 $THEME->rendererfactory = 'theme_overridden_renderer_factory';
 
 // Permite customização de CSS via painel administrativo
 $THEME->enable_dock = false;
 
-// Configurações de YUI (legado - mantido para compatibilidade)
-$THEME->yuicssmodules = [];
-
-// Configurações de JavaScript
+// Configurações de JavaScript - corrigido para Moodle 5.x
 $THEME->javascripts = [];
 $THEME->javascripts_footer = [];
 
-// Configurações de imagens
-$THEME->supportscssoptimisation = false;
+// Suporte à otimização CSS - habilitado para melhor performance
+$THEME->supportscssoptimisation = true;
 
 // Define que o tema suporta customização via SCSS
 $THEME->csstreepostprocessor = 'theme_ufpel_css_tree_post_processor';
@@ -81,7 +78,7 @@ $THEME->extrascsscallback = 'theme_ufpel_get_extra_scss';
 // Configurações de favicon personalizado
 $THEME->favicon = 'pix/favicon.ico';
 
-// Habilita uso de fontes customizadas
+// Habilita uso de course index - importante para Moodle 5.x
 $THEME->usescourseindex = true;
 
 // Configurações de acessibilidade WCAG 2.2
@@ -97,9 +94,22 @@ $THEME->csspostprocess = 'theme_ufpel_process_css';
 $THEME->blockrtlmanipulations = [];
 
 // Suporte a presets via painel administrativo
-$THEME->scss_raw_setting = 'scssraw';
-$THEME->scss_preset_setting = 'preset';
+$THEME->presets = [
+    'default.scss' => 'default.scss',
+];
 
 // Configurações adicionais para compatibilidade com Moodle 5.x
 $THEME->requiredblocks = '';
 $THEME->addblockposition = BLOCK_ADDBLOCK_POSITION_DEFAULT;
+
+// Habilitações específicas do Moodle 5.x
+$THEME->enablecourseheadermenu = true;
+$THEME->activityheaderconfig = [
+    'notitle' => false,
+    'nodescription' => false,
+    'nocompletion' => false,
+    'nofloat' => false,
+];
+
+// Remove propriedades obsoletas do Moodle 5.x
+// $THEME->yuicssmodules = []; // Removido - YUI não é mais usado no Moodle 5.x

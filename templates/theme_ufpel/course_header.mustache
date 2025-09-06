@@ -1,0 +1,359 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_ufpel/course_header
+
+    Template do cabeçalho personalizado do curso para o tema UFPel.
+    
+    Este template renderiza um cabeçalho atrativo para páginas de curso,
+    incluindo imagem de capa (quando disponível) e informações do curso.
+    Compatível com Moodle 5.x e padrões WCAG 2.2.
+    
+    Variáveis do contexto:
+    * courseid - ID do curso
+    * coursename - Nome completo do curso
+    * courseshortname - Nome abreviado do curso
+    * courseimage - URL da imagem de capa do curso (opcional)
+    * courseurl - URL do curso
+    * enablecourseheader - Flag para habilitar/desabilitar o cabeçalho customizado
+    * participantcount - Número de participantes
+    * categoryname - Nome da categoria do curso
+
+    @package theme_ufpel
+    @copyright 2025 Universidade Federal de Pelotas
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+{{#enablecourseheader}}
+{{#courseid}}
+<div class="ufpel-course-header {{^courseimage}}no-image{{/courseimage}}" 
+     role="banner" 
+     aria-label="{{#str}}courseheader, theme_ufpel{{/str}}">
+    
+    {{! Imagem de capa do curso (se disponível) }}
+    {{#courseimage}}
+    <div class="ufpel-course-header-image">
+        <img src="{{courseimage}}" 
+             alt="{{#str}}coursecoverimage, theme_ufpel{{/str}}: {{coursename}}" 
+             class="img-fluid"
+             loading="lazy"
+             decoding="async">
+    </div>
+    {{/courseimage}}
+    
+    {{! Conteúdo do cabeçalho com informações do curso }}
+    <div class="ufpel-course-header-content">
+        
+        {{! Navegação estruturada para acessibilidade }}
+        <nav aria-label="{{#str}}courseinfo, theme_ufpel{{/str}}" class="visually-hidden">
+            <a href="#region-main" class="ufpel-skip-link">{{#str}}skiptomaincontent, theme_ufpel{{/str}}</a>
+        </nav>
+        
+        {{! Container do conteúdo }}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    
+                    {{! Título principal do curso }}
+                    <h1 class="ufpel-course-title" id="course-title">
+                        <a href="{{courseurl}}" 
+                           class="text-decoration-none text-inherit"
+                           title="{{#str}}gotocourse, theme_ufpel{{/str}}: {{coursename}}"
+                           aria-describedby="course-subtitle">
+                            {{{coursename}}}
+                        </a>
+                    </h1>
+                    
+                    {{! Subtítulo com nome abreviado (se diferente do nome completo) }}
+                    {{#courseshortname}}
+                    {{^coursenameshort_equals_fullname}}
+                    <p class="ufpel-course-subtitle" id="course-subtitle">
+                        {{{courseshortname}}}
+                    </p>
+                    {{/coursenameshort_equals_fullname}}
+                    {{/courseshortname}}
+                    
+                    {{! Informações adicionais do curso }}
+                    <div class="ufpel-course-meta d-flex flex-wrap gap-2 mt-3" 
+                         aria-label="{{#str}}courseinfo, theme_ufpel{{/str}}">
+                        
+                        {{! Badge do ID do curso }}
+                        <span class="badge bg-light text-dark rounded-pill" 
+                              title="{{#str}}courseid, core{{/str}}">
+                            <i class="fa fa-id-badge me-1" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{#str}}courseid, core{{/str}}: </span>
+                            {{courseid}}
+                        </span>
+                        
+                        {{! Contador de participantes (se disponível) }}
+                        {{#participantcount}}
+                        <span class="badge bg-info text-white rounded-pill" 
+                              title="{{#str}}participants, core{{/str}}">
+                            <i class="fa fa-users me-1" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{#str}}participants, core{{/str}}: </span>
+                            {{participantcount}}
+                        </span>
+                        {{/participantcount}}
+                        
+                        {{! Categoria do curso (se disponível) }}
+                        {{#categoryname}}
+                        <span class="badge bg-secondary text-white rounded-pill" 
+                              title="{{#str}}category, core{{/str}}">
+                            <i class="fa fa-folder me-1" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{#str}}category, core{{/str}}: </span>
+                            {{{categoryname}}}
+                        </span>
+                        {{/categoryname}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{! Overlay de gradiente para melhor legibilidade do texto sobre imagem }}
+    {{#courseimage}}
+    <div class="ufpel-course-header-overlay" aria-hidden="true"></div>
+    {{/courseimage}}
+</div>
+
+{{! Separador visual }}
+<div class="ufpel-course-header-separator mb-4" aria-hidden="true">
+    <div class="container-fluid">
+        <hr class="border-primary opacity-25">
+    </div>
+</div>
+{{/courseid}}
+{{/enablecourseheader}}
+
+{{! Versão simplificada para quando o cabeçalho customizado está desabilitado }}
+{{^enablecourseheader}}
+{{#courseid}}
+<div class="ufpel-course-header-simple py-3 mb-4 bg-light rounded" role="banner">
+    <div class="container-fluid">
+        <h1 class="h3 mb-0 text-primary">
+            <a href="{{courseurl}}" 
+               class="text-decoration-none"
+               title="{{#str}}gotocourse, theme_ufpel{{/str}}: {{coursename}}">
+                {{{coursename}}}
+            </a>
+        </h1>
+        {{#courseshortname}}
+        {{^coursenameshort_equals_fullname}}
+        <p class="text-muted mb-0 small">{{{courseshortname}}}</p>
+        {{/coursenameshort_equals_fullname}}
+        {{/courseshortname}}
+    </div>
+</div>
+{{/courseid}}
+{{/enablecourseheader}}
+
+{{! CSS específico inline para garantir funcionalidade }}
+<style>
+.ufpel-course-header {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #00408F 0%, #0080FF 100%);
+}
+
+.ufpel-course-header.no-image {
+    color: white;
+}
+
+.ufpel-course-header-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.ufpel-course-header-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.8);
+    transition: filter 0.3s ease;
+}
+
+.ufpel-course-header:hover .ufpel-course-header-image img {
+    filter: brightness(0.9);
+}
+
+.ufpel-course-header-content {
+    position: relative;
+    padding: 2rem 0;
+    z-index: 2;
+}
+
+.ufpel-course-header:not(.no-image) .ufpel-course-header-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+}
+
+.ufpel-course-header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6));
+    pointer-events: none;
+}
+
+.ufpel-course-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.ufpel-course-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin: 0.5rem 0 0 0;
+    font-weight: 400;
+}
+
+.ufpel-course-meta .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ufpel-course-meta .badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.ufpel-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #00408F;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 9999;
+    font-weight: 500;
+    transition: top 0.3s ease;
+}
+
+.ufpel-skip-link:focus {
+    top: 6px;
+    color: white;
+    text-decoration: none;
+}
+
+.text-inherit {
+    color: inherit !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .ufpel-course-header-image img {
+        height: 150px;
+    }
+    
+    .ufpel-course-header-content {
+        padding: 1.5rem 0;
+    }
+    
+    .ufpel-course-title {
+        font-size: 1.75rem;
+    }
+    
+    .ufpel-course-subtitle {
+        font-size: 1rem;
+    }
+    
+    .ufpel-course-meta {
+        gap: 0.25rem !important;
+    }
+    
+    .ufpel-course-meta .badge {
+        font-size: 0.7rem;
+        padding: 0.375rem 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .ufpel-course-title {
+        font-size: 1.5rem;
+    }
+    
+    .ufpel-course-header {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    .ufpel-course-header {
+        border: 2px solid #00408F;
+    }
+    
+    .ufpel-course-header-overlay {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+    }
+    
+    .ufpel-course-meta .badge {
+        border: 1px solid currentColor;
+        font-weight: 600;
+    }
+}
+
+/* Movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .ufpel-course-header-image img,
+    .ufpel-course-meta .badge,
+    .ufpel-skip-link {
+        transition: none;
+    }
+    
+    .ufpel-course-meta .badge:hover {
+        transform: none;
+    }
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    .ufpel-course-header.no-image {
+        background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+    }
+    
+    .ufpel-course-header-simple {
+        background-color: #2d3748 !important;
+        color: #e2e8f0;
+    }
+}
+
+/* Focus visible para acessibilidade */
+.ufpel-course-title a:focus-visible {
+    outline: 2px solid #F7A600;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+</style>

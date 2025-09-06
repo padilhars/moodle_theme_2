@@ -18,7 +18,7 @@
  * Funções principais do tema UFPel
  *
  * Este arquivo contém todas as funções auxiliares e callbacks
- * necessários para o funcionamento do tema UFPel.
+ * necessários para o funcionamento do tema UFPel no Moodle 5.x.
  *
  * @package    theme_ufpel
  * @copyright  2025 Universidade Federal de Pelotas
@@ -95,9 +95,14 @@ function theme_ufpel_get_main_scss_content($theme) {
     $scss = '';
     
     // 1. Adiciona pre.scss (configurações iniciais)
+    $prescss = $CFG->dirroot . '/theme/ufpel/scss/pre.scss';
+    if (file_exists($prescss)) {
+        $scss .= file_get_contents($prescss);
+    }
+
+    // 2. Adiciona preset
     $filename = !empty($theme->settings->preset) ? $theme->settings->preset : 'default.scss';
     $fs = get_file_storage();
-
     $context = context_system::instance();
     
     // Tenta carregar arquivo de preset personalizado
@@ -105,19 +110,19 @@ function theme_ufpel_get_main_scss_content($theme) {
         $presetfile = $fs->get_file($context->id, 'theme_ufpel', 'preset', 0, '/', $filename);
         if (!$presetfile) {
             // Fallback para o preset padrão se o arquivo não existir
-            $scss .= file_get_contents($CFG->dirroot . '/theme/ufpel/scss/presets/default.scss');
+            $defaultpreset = $CFG->dirroot . '/theme/ufpel/scss/preset/default.scss';
+            if (file_exists($defaultpreset)) {
+                $scss .= file_get_contents($defaultpreset);
+            }
         } else {
             $scss .= $presetfile->get_content();
         }
     } else {
         // Carrega preset padrão
-        $scss .= file_get_contents($CFG->dirroot . '/theme/ufpel/scss/presets/default.scss');
-    }
-
-    // 2. Adiciona pre.scss
-    $prescss = $CFG->dirroot . '/theme/ufpel/scss/pre.scss';
-    if (file_exists($prescss)) {
-        $scss .= file_get_contents($prescss);
+        $defaultpreset = $CFG->dirroot . '/theme/ufpel/scss/preset/default.scss';
+        if (file_exists($defaultpreset)) {
+            $scss .= file_get_contents($defaultpreset);
+        }
     }
 
     // 3. Adiciona SCSS customizado das configurações
@@ -148,8 +153,6 @@ function theme_ufpel_get_main_scss_content($theme) {
  * @return string CSS processado
  */
 function theme_ufpel_process_css($css, $theme) {
-    global $OUTPUT;
-
     // Substitui URLs de imagens personalizadas
     $css = theme_ufpel_set_logo($css, $theme);
     $css = theme_ufpel_set_favicon($css, $theme);
@@ -168,8 +171,6 @@ function theme_ufpel_process_css($css, $theme) {
  * @return string CSS com logotipo atualizado
  */
 function theme_ufpel_set_logo($css, $theme) {
-    global $OUTPUT;
-    
     $logo = $theme->setting_file_url('logo', 'logo');
     if (!empty($logo)) {
         $tag = '[[setting:logo]]';
@@ -206,7 +207,7 @@ function theme_ufpel_set_favicon($css, $theme) {
  * de um curso específico para uso nos templates.
  *
  * @param int $courseid ID do curso
- * @return string|null URL da imagem ou null se não existir
+ * @return moodle_url|null URL da imagem ou null se não existir
  */
 function theme_ufpel_get_course_image($courseid) {
     global $CFG;
@@ -242,9 +243,9 @@ function theme_ufpel_get_course_image($courseid) {
  * Função chamada para fazer ajustes finais na árvore CSS
  * antes da compilação final.
  *
- * @param string $tree Árvore CSS
+ * @param css_tree $tree Árvore CSS
  * @param theme_config $theme Configuração do tema
- * @return string Árvore CSS processada
+ * @return css_tree Árvore CSS processada
  */
 function theme_ufpel_css_tree_post_processor($tree, $theme) {
     // Aplica otimizações e ajustes específicos do tema
@@ -267,34 +268,66 @@ function theme_ufpel_update_settings_images($setting) {
 }
 
 /**
- * Retorna o contexto para templates Mustache
+ * Implementa callback para templates Mustache
  *
- * Esta função fornece dados adicionais para os templates
- * Mustache do tema UFPel.
+ * Esta função adiciona dados específicos do tema UFPel ao contexto
+ * dos templates Mustache, compatível com Moodle 5.x.
  *
- * @param renderer_base $renderer O renderer atual
- * @param array $templatecontext Contexto existente do template
- * @return array Contexto atualizado para o template
+ * @param array $context Contexto existente do template
+ * @param stdClass $theme Configuração do tema
+ * @return array Contexto atualizado
  */
-function theme_ufpel_mustache_template_context($renderer, $templatecontext) {
-    global $COURSE, $PAGE;
+function theme_ufpel_mustache_context_processor($context, $theme) {
+    global $COURSE, $SITE;
 
     // Adiciona informações específicas do curso ao contexto
     if (isset($COURSE->id) && $COURSE->id > 1) {
-        $templatecontext['courseid'] = $COURSE->id;
-        $templatecontext['coursename'] = format_string($COURSE->fullname);
-        $templatecontext['courseshortname'] = format_string($COURSE->shortname);
+        $context['courseid'] = $COURSE->id;
+        $context['coursename'] = format_string($COURSE->fullname);
+        $context['courseshortname'] = format_string($COURSE->shortname);
         
         // Adiciona URL da imagem de capa do curso
         $courseimage = theme_ufpel_get_course_image($COURSE->id);
         if ($courseimage) {
-            $templatecontext['courseimage'] = $courseimage->out();
+            $context['courseimage'] = $courseimage->out();
         }
     }
 
     // Adiciona configurações do tema ao contexto
-    $templatecontext['ufpel_logo'] = theme_get_setting('logo', 'ufpel');
-    $templatecontext['ufpel_primarycolor'] = get_config('theme_ufpel', 'primarycolor');
+    $context['ufpel_logo'] = $theme->setting_file_url('logo', 'logo');
+    $context['ufpel_primarycolor'] = get_config('theme_ufpel', 'primarycolor');
+    $context['institution_name'] = 'Universidade Federal de Pelotas';
+    $context['institution_url'] = 'https://ufpel.edu.br';
+    $context['current_year'] = date('Y');
+    $context['enablecourseheader'] = get_config('theme_ufpel', 'enablecourseheader') ?? true;
 
-    return $templatecontext;
+    return $context;
+}
+
+/**
+ * Hook para adicionar JavaScript específico do tema
+ *
+ * Função compatível com Moodle 5.x para adicionar funcionalidades JS.
+ *
+ * @param moodle_page $page A página atual
+ */
+function theme_ufpel_page_init(moodle_page $page) {
+    // Adiciona JavaScript específico do tema se necessário
+    // Exemplo: $page->requires->js('/theme/ufpel/javascript/theme.js');
+}
+
+/**
+ * Obtém configurações exportáveis para JavaScript
+ *
+ * Permite exportar configurações do tema para uso em JavaScript.
+ *
+ * @param renderer_base $renderer O renderer atual
+ * @return array Configurações exportáveis
+ */
+function theme_ufpel_get_exportable_settings($renderer) {
+    return [
+        'primarycolor' => get_config('theme_ufpel', 'primarycolor') ?: '#00408F',
+        'secondarycolor' => get_config('theme_ufpel', 'secondarycolor') ?: '#0080FF',
+        'accentcolor' => get_config('theme_ufpel', 'accentcolor') ?: '#F7A600',
+    ];
 }

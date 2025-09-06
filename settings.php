@@ -18,7 +18,7 @@
  * Configurações administrativas do tema UFPel
  *
  * Este arquivo define todas as configurações disponíveis no painel
- * administrativo para personalização do tema UFPel.
+ * administrativo para personalização do tema UFPel no Moodle 5.x.
  *
  * @package    theme_ufpel
  * @copyright  2025 Universidade Federal de Pelotas
@@ -30,8 +30,9 @@ defined('MOODLE_INTERNAL') || die();
 // Verifica se o usuário tem permissão para acessar as configurações
 if ($ADMIN->fulltree) {
 
-    // Página principal de configurações do tema
-    $settings = new theme_boost_admin_settingspage_tabs('themesettingufpel', get_string('configtitle', 'theme_ufpel'));
+    // Página principal de configurações do tema - corrigido para Moodle 5.x
+    $settings = new theme_boost_admin_settingspage_tabs('themesettingufpel', 
+        get_string('configtitle', 'theme_ufpel'));
 
     /*
      * ========================================================================
@@ -46,7 +47,7 @@ if ($ADMIN->fulltree) {
     $description = get_string('preset_desc', 'theme_ufpel');
     $default = 'default.scss';
 
-    // Busca presets disponíveis
+    // Busca presets disponíveis - corrigido para Moodle 5.x
     $context = context_system::instance();
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, 'theme_ufpel', 'preset', 0, 'itemid, filepath, filename', false);
@@ -62,6 +63,16 @@ if ($ADMIN->fulltree) {
     }
 
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Upload de arquivo de preset personalizado
+    $name = 'theme_ufpel/presetfiles';
+    $title = get_string('presetfiles', 'theme_boost');
+    $description = get_string('presetfiles_desc', 'theme_boost');
+
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'preset', 0,
+        array('maxfiles' => 20, 'accepted_types' => array('.scss')));
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
@@ -164,6 +175,15 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Upload de imagem de fundo para login
+    $name = 'theme_ufpel/loginbackground';
+    $title = get_string('loginbackground', 'theme_ufpel');
+    $description = get_string('loginbackground_desc', 'theme_ufpel');
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'loginbackground', 0,
+        array('maxfiles' => 1, 'accepted_types' => array('.png', '.jpg', '.jpeg')));
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     $settings->add($page);
 
     /*
@@ -188,6 +208,104 @@ if ($ADMIN->fulltree) {
     $description = get_string('enableimagecache_desc', 'theme_ufpel');
     $default = 1;
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Configuração para otimização de performance
+    $name = 'theme_ufpel/enableperformanceoptimization';
+    $title = get_string('enableperformanceoptimization', 'theme_ufpel');
+    $description = get_string('enableperformanceoptimization_desc', 'theme_ufpel');
+    $default = 1;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Configuração para modo escuro (preparação futura)
+    $name = 'theme_ufpel/enabledarkmode';
+    $title = get_string('enabledarkmode', 'theme_ufpel');
+    $description = get_string('enabledarkmode_desc', 'theme_ufpel');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Campo personalizado para JavaScript adicional
+    $name = 'theme_ufpel/customjs';
+    $title = get_string('customjs', 'theme_ufpel');
+    $description = get_string('customjs_desc', 'theme_ufpel');
+    $default = '';
+    $setting = new admin_setting_configtextarea($name, $title, $description, $default, PARAM_RAW);
+    $page->add($setting);
+
+    $settings->add($page);
+
+    /*
+     * ========================================================================
+     * GUIA: CONFIGURAÇÕES DE ACESSIBILIDADE
+     * ========================================================================
+     */
+    $page = new admin_settingpage('theme_ufpel_accessibility', 
+        get_string('accessibilitysettings', 'theme_ufpel'));
+
+    // Alto contraste
+    $name = 'theme_ufpel/enablehighcontrast';
+    $title = get_string('enablehighcontrast', 'theme_ufpel');
+    $description = get_string('enablehighcontrast_desc', 'theme_ufpel');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Tamanho da fonte
+    $name = 'theme_ufpel/fontsize';
+    $title = get_string('fontsize', 'theme_ufpel');
+    $description = get_string('fontsize_desc', 'theme_ufpel');
+    $default = '1rem';
+    $choices = [
+        '0.875rem' => get_string('fontsize_small', 'theme_ufpel'),
+        '1rem' => get_string('fontsize_normal', 'theme_ufpel'),
+        '1.125rem' => get_string('fontsize_large', 'theme_ufpel'),
+        '1.25rem' => get_string('fontsize_xlarge', 'theme_ufpel'),
+    ];
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Redução de movimento
+    $name = 'theme_ufpel/enablereducedmotion';
+    $title = get_string('enablereducedmotion', 'theme_ufpel');
+    $description = get_string('enablereducedmotion_desc', 'theme_ufpel');
+    $default = 0;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
+    /*
+     * ========================================================================
+     * GUIA: INFORMAÇÕES E SUPORTE
+     * ========================================================================
+     */
+    $page = new admin_settingpage('theme_ufpel_info', get_string('themeinfo', 'theme_ufpel'));
+
+    // Informações do tema
+    $name = 'theme_ufpel/themeinfo';
+    $heading = get_string('themeinfo', 'theme_ufpel');
+    $information = get_string('themeinfo_desc', 'theme_ufpel');
+    $setting = new admin_setting_heading($name, $heading, $information);
+    $page->add($setting);
+
+    // Versão do tema
+    $name = 'theme_ufpel/version';
+    $heading = get_string('themeversion', 'theme_ufpel');
+    $information = '1.0.1 - ' . get_string('compatible_moodle5', 'theme_ufpel');
+    $setting = new admin_setting_heading($name, $heading, $information);
+    $page->add($setting);
+
+    // Link para documentação
+    $name = 'theme_ufpel/documentation';
+    $heading = get_string('documentation', 'theme_ufpel');
+    $information = get_string('documentation_desc', 'theme_ufpel');
+    $setting = new admin_setting_heading($name, $heading, $information);
     $page->add($setting);
 
     $settings->add($page);

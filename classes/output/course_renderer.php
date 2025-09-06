@@ -18,8 +18,7 @@
  * Renderer de cursos personalizado do tema UFPel
  *
  * Este arquivo contém o renderer específico para cursos que implementa
- * customizações na exibição de páginas de curso, incluindo o cabeçalho
- * personalizado com imagem de capa.
+ * customizações na exibição de páginas de curso compatíveis com Moodle 5.x.
  *
  * @package    theme_ufpel
  * @copyright  2025 Universidade Federal de Pelotas
@@ -33,6 +32,9 @@ use moodle_url;
 use context_course;
 use course_modinfo;
 use core_course_category;
+use completion_info;
+use cm_info;
+use core_course\external\course_summary_exporter;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -40,7 +42,7 @@ defined('MOODLE_INTERNAL') || die();
  * Renderer personalizado para páginas de curso
  *
  * Herda funcionalidades do renderer padrão e adiciona
- * customizações específicas do tema UFPel para cursos.
+ * customizações específicas do tema UFPel para Moodle 5.x.
  */
 class course_renderer extends \core_course_renderer {
 
@@ -51,11 +53,11 @@ class course_renderer extends \core_course_renderer {
      * usando o template course_header.mustache com imagem de capa e
      * informações detalhadas do curso.
      *
-     * @param stdClass $course Objeto do curso
+     * @param stdClass|null $course Objeto do curso
      * @return string HTML do cabeçalho do curso renderizado
      */
     public function course_header($course = null) {
-        global $COURSE, $DB;
+        global $COURSE;
 
         // Se não foi passado um curso, usa o curso atual
         if ($course === null) {
@@ -85,14 +87,14 @@ class course_renderer extends \core_course_renderer {
      * @return stdClass Contexto preparado para o template
      */
     private function prepare_course_header_context($course) {
-        global $DB;
-
         $context = new stdClass();
 
         // Informações básicas do curso
         $context->courseid = $course->id;
-        $context->coursename = format_string($course->fullname, true, ['context' => \context_course::instance($course->id)]);
-        $context->courseshortname = format_string($course->shortname, true, ['context' => \context_course::instance($course->id)]);
+        $context->coursename = format_string($course->fullname, true, 
+            ['context' => context_course::instance($course->id)]);
+        $context->courseshortname = format_string($course->shortname, true, 
+            ['context' => context_course::instance($course->id)]);
         $context->courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);
 
         // Verifica se o nome abreviado é diferente do nome completo
@@ -108,10 +110,14 @@ class course_renderer extends \core_course_renderer {
         $context->participantcount = $this->get_course_participant_count($course->id);
 
         // Obtém informações da categoria
-        $category = core_course_category::get($course->category, IGNORE_MISSING);
-        if ($category) {
-            $context->categoryname = format_string($category->name);
-            $context->categoryurl = new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+        try {
+            $category = core_course_category::get($course->category, IGNORE_MISSING);
+            if ($category) {
+                $context->categoryname = format_string($category->name);
+                $context->categoryurl = new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+            }
+        } catch (Exception $e) {
+            // Categoria não encontrada, continua sem ela
         }
 
         // Configurações do tema
@@ -133,39 +139,44 @@ class course_renderer extends \core_course_renderer {
         global $CFG;
         require_once($CFG->libdir . '/filelib.php');
 
-        $context = context_course::instance($courseid);
-        $fs = get_file_storage();
-        
-        // Busca arquivos na área de resumo do curso (course summary files)
-        $files = $fs->get_area_files($context->id, 'course', 'overviewfiles', 0, 'filename', false);
-        
-        foreach ($files as $file) {
-            if ($file->is_valid_image()) {
-                return moodle_url::make_pluginfile_url(
-                    $file->get_contextid(),
-                    $file->get_component(),
-                    $file->get_filearea(),
-                    $file->get_itemid(),
-                    $file->get_filepath(),
-                    $file->get_filename()
-                );
+        try {
+            $context = context_course::instance($courseid);
+            $fs = get_file_storage();
+            
+            // Busca arquivos na área de resumo do curso (course summary files)
+            $files = $fs->get_area_files($context->id, 'course', 'overviewfiles', 0, 'filename', false);
+            
+            foreach ($files as $file) {
+                if ($file->is_valid_image()) {
+                    return moodle_url::make_pluginfile_url(
+                        $file->get_contextid(),
+                        $file->get_component(),
+                        $file->get_filearea(),
+                        $file->get_itemid(),
+                        $file->get_filepath(),
+                        $file->get_filename()
+                    );
+                }
             }
-        }
-        
-        // Se não encontrou imagem de resumo, busca em outras áreas
-        $files = $fs->get_area_files($context->id, 'course', 'images', 0, 'filename', false);
-        
-        foreach ($files as $file) {
-            if ($file->is_valid_image()) {
-                return moodle_url::make_pluginfile_url(
-                    $file->get_contextid(),
-                    $file->get_component(),
-                    $file->get_filearea(),
-                    $file->get_itemid(),
-                    $file->get_filepath(),
-                    $file->get_filename()
-                );
+            
+            // Se não encontrou imagem de resumo, busca em outras áreas
+            $files = $fs->get_area_files($context->id, 'course', 'images', 0, 'filename', false);
+            
+            foreach ($files as $file) {
+                if ($file->is_valid_image()) {
+                    return moodle_url::make_pluginfile_url(
+                        $file->get_contextid(),
+                        $file->get_component(),
+                        $file->get_filearea(),
+                        $file->get_itemid(),
+                        $file->get_filepath(),
+                        $file->get_filename()
+                    );
+                }
             }
+        } catch (Exception $e) {
+            // Em caso de erro, retorna null
+            debugging('Erro ao buscar imagem do curso: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
         
         return null;
@@ -183,16 +194,21 @@ class course_renderer extends \core_course_renderer {
     private function get_course_participant_count($courseid) {
         global $DB;
 
-        $sql = "SELECT COUNT(DISTINCT u.id)
-                FROM {user} u
-                JOIN {user_enrolments} ue ON ue.userid = u.id
-                JOIN {enrol} e ON e.id = ue.enrolid
-                WHERE e.courseid = :courseid 
-                AND ue.status = 0 
-                AND u.deleted = 0 
-                AND u.suspended = 0";
+        try {
+            $sql = "SELECT COUNT(DISTINCT u.id)
+                    FROM {user} u
+                    JOIN {user_enrolments} ue ON ue.userid = u.id
+                    JOIN {enrol} e ON e.id = ue.enrolid
+                    WHERE e.courseid = :courseid 
+                    AND ue.status = 0 
+                    AND u.deleted = 0 
+                    AND u.suspended = 0";
 
-        return $DB->count_records_sql($sql, ['courseid' => $courseid]);
+            return $DB->count_records_sql($sql, ['courseid' => $courseid]);
+        } catch (Exception $e) {
+            debugging('Erro ao contar participantes do curso: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return 0;
+        }
     }
 
     /**
@@ -204,11 +220,10 @@ class course_renderer extends \core_course_renderer {
      * @param stdClass $course Objeto do curso
      * @param int|stdClass|section_info $section Seção do curso
      * @param course_modinfo $modinfo Informações dos módulos do curso
-     * @param int $sr Número da seção relativa
-     * @param string $displayoptions Opções de exibição
+     * @param array $displayoptions Opções de exibição
      * @return string HTML da seção renderizada
      */
-    public function course_section_cm_list($course, $section, $modinfo, $displayoptions = []) {
+    public function course_section_cm_list($course, $section, $modinfo, $displayoptions = []): string {
         $output = parent::course_section_cm_list($course, $section, $modinfo, $displayoptions);
         
         // Adiciona classes CSS específicas do tema UFPel
@@ -232,7 +247,7 @@ class course_renderer extends \core_course_renderer {
      * @param array $displayoptions Opções de exibição
      * @return string HTML do módulo renderizado
      */
-    public function course_section_cm($course, $completioninfo, $mod, $sectionreturn, $displayoptions = []) {
+    public function course_section_cm($course, $completioninfo, $mod, $sectionreturn, $displayoptions = []): string {
         $output = parent::course_section_cm($course, $completioninfo, $mod, $sectionreturn, $displayoptions);
         
         // Adiciona classes específicas baseadas no tipo de módulo
@@ -250,10 +265,9 @@ class course_renderer extends \core_course_renderer {
      * Sobrescreve a exibição da lista de cursos para aplicar
      * o design institucional UFPel.
      *
-     * @param array $courses Array de cursos
-     * @param bool $showcategoryname Mostrar nome da categoria
-     * @param int $totalcount Total de cursos
-     * @param course_in_list $chelper Helper de curso em lista
+     * @param string|null $displaytype Tipo de exibição
+     * @param array|null $courses Array de cursos
+     * @param int|null $totalcount Total de cursos
      * @return string HTML da lista de cursos
      */
     public function view_available_courses($displaytype = null, $courses = null, $totalcount = null) {
@@ -273,11 +287,15 @@ class course_renderer extends \core_course_renderer {
      * para exibição de progresso e conclusão.
      *
      * @param stdClass $course Objeto do curso
-     * @param completion_info $completioninfo Informações de conclusão
+     * @param completion_info|null $completioninfo Informações de conclusão
      * @return string HTML do progresso renderizado
      */
-    public function course_progress_info($course, $completioninfo) {
+    public function course_progress_info($course, $completioninfo = null) {
         global $USER;
+
+        if ($completioninfo === null) {
+            $completioninfo = new completion_info($course);
+        }
 
         if (!$completioninfo->is_enabled()) {
             return '';
@@ -287,7 +305,7 @@ class course_renderer extends \core_course_renderer {
         $context->courseid = $course->id;
         
         // Calcula porcentagem de conclusão
-        $percentage = progress::get_course_progress_percentage($course, $USER->id);
+        $percentage = $completioninfo->get_progress_percentage();
         if (!is_null($percentage)) {
             $context->progress_percentage = round($percentage);
             $context->has_progress = true;
@@ -295,13 +313,43 @@ class course_renderer extends \core_course_renderer {
             // Define classes CSS baseadas no progresso
             if ($percentage >= 100) {
                 $context->progress_class = 'ufpel-progress-complete';
+                $context->progress_100_reached = true;
+                $context->progress_75_reached = true;
+                $context->progress_50_reached = true;
+                $context->progress_25_reached = true;
             } elseif ($percentage >= 75) {
                 $context->progress_class = 'ufpel-progress-high';
+                $context->progress_75_reached = true;
+                $context->progress_50_reached = true;
+                $context->progress_25_reached = true;
             } elseif ($percentage >= 50) {
                 $context->progress_class = 'ufpel-progress-medium';
+                $context->progress_50_reached = true;
+                $context->progress_25_reached = true;
+            } elseif ($percentage >= 25) {
+                $context->progress_class = 'ufpel-progress-low';
+                $context->progress_25_reached = true;
             } else {
                 $context->progress_class = 'ufpel-progress-low';
             }
+            
+            // Adiciona informações de atividades
+            $modinfo = get_fast_modinfo($course);
+            $completedactivities = 0;
+            $totalactivities = 0;
+            
+            foreach ($modinfo->get_cms() as $cm) {
+                if ($cm->completion != COMPLETION_TRACKING_NONE) {
+                    $totalactivities++;
+                    $completion = $completioninfo->get_completion($cm, $USER->id);
+                    if ($completion->completionstate != COMPLETION_INCOMPLETE) {
+                        $completedactivities++;
+                    }
+                }
+            }
+            
+            $context->completed_activities = $completedactivities;
+            $context->total_activities = $totalactivities;
         }
 
         return $this->render_from_template('theme_ufpel/course_progress', $context);
@@ -320,6 +368,60 @@ class course_renderer extends \core_course_renderer {
         
         // Adiciona classes CSS específicas do tema UFPel
         $output = str_replace('class="breadcrumb"', 'class="breadcrumb ufpel-breadcrumb"', $output);
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza um cartão de curso individual
+     *
+     * Aplica estilos específicos do tema UFPel aos cartões de curso.
+     *
+     * @param stdClass $course Objeto do curso
+     * @param array $additionalclasses Classes CSS adicionais
+     * @return string HTML do cartão do curso
+     */
+    public function course_card($course, $additionalclasses = []) {
+        $output = parent::course_card($course, $additionalclasses);
+        
+        // Adiciona classes específicas do tema UFPel
+        $output = str_replace('class="card"', 'class="card ufpel-course-card"', $output);
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza a informação de categoria do curso
+     *
+     * Aplica estilos UFPel às informações de categoria.
+     *
+     * @param stdClass $course
+     * @return string
+     */
+    public function course_category_info($course) {
+        $output = parent::course_category_info($course);
+        
+        if (!empty($output)) {
+            $output = str_replace('class="category"', 'class="category ufpel-category"', $output);
+        }
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza seções do curso com melhorias de acessibilidade
+     *
+     * @param stdClass $course
+     * @param array $sections
+     * @param array $activities
+     * @param array $displaysection
+     * @return string
+     */
+    public function course_section_list($course, $sections, $activities, $displaysection) {
+        $output = parent::course_section_list($course, $sections, $activities, $displaysection);
+        
+        // Melhora a acessibilidade e adiciona classes UFPel
+        $output = str_replace('class="section"', 'class="section ufpel-section"', $output);
         
         return $output;
     }

@@ -1,7 +1,7 @@
 /*!
  * Tema UFPel - Preset Padrão
  * 
- * Este arquivo define o preset padrão do tema UFPel,
+ * Este arquivo define o preset padrão do tema UFPel para Moodle 5.x,
  * incluindo importações do Bootstrap e configurações base.
  * Serve como base para outros presets personalizados.
  *
@@ -11,10 +11,10 @@
  */
 
 // ========================================================================
-// IMPORTAÇÕES DO BOOTSTRAP E BOOST
+// IMPORTAÇÕES DO BOOTSTRAP E BOOST (Moodle 5.x)
 // ========================================================================
 
-// Importa o preset padrão do tema Boost (base Bootstrap)
+// Importa o preset padrão do tema Boost (Bootstrap 5 para Moodle 5.x)
 @import "../../boost/scss/preset/default";
 
 // ========================================================================
@@ -28,46 +28,112 @@ $enable-gradients: false !default;
 $enable-transitions: true !default;
 $enable-reduced-motion: true !default;
 $enable-smooth-scroll: true !default;
+$enable-rfs: true !default; // Responsive Font Sizes - novo no Bootstrap 5
+$enable-validation-icons: true !default;
+$enable-negative-margins: true !default;
 
 // ========================================================================
-// CONFIGURAÇÕES DE GRID E LAYOUT
+// CONFIGURAÇÕES DE GRID E LAYOUT (Bootstrap 5/Moodle 5.x)
 // ========================================================================
 
-// Grid system personalizado
+// Grid system atualizado para Bootstrap 5
 $grid-columns: 12 !default;
 $grid-gutter-width: 1.5rem !default;
 $grid-row-columns: 6 !default;
 
 // Container
-$container-padding-x: $grid-gutter-width * 0.5 !default;
+$container-padding-x: $grid-gutter-width !default;
+
+// Breakpoints atualizados para Bootstrap 5
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+
+// Container max widths para Bootstrap 5
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px
+) !default;
 
 // ========================================================================
-// CONFIGURAÇÕES DE COMPONENTES BOOTSTRAP
+// CONFIGURAÇÕES DE SPACING (Bootstrap 5)
 // ========================================================================
 
-// Navbar
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4,
+  7: $spacer * 5,
+  8: $spacer * 6
+) !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE COMPONENTES BOOTSTRAP 5
+// ========================================================================
+
+// Navbar - atualizadas para Bootstrap 5
 $navbar-padding-y: 1rem !default;
 $navbar-padding-x: null !default;
 $navbar-nav-link-padding-x: 1rem !default;
 $navbar-brand-margin-end: 1rem !default;
+$navbar-brand-font-size: 1.5rem !default;
+$navbar-brand-height: 3rem !default;
+$navbar-toggler-padding-y: 0.25rem !default;
+$navbar-toggler-padding-x: 0.75rem !default;
+$navbar-toggler-font-size: 1.25rem !default;
+$navbar-toggler-border-radius: $border-radius !default;
 
-// Cards
+// Cards - melhoradas para Bootstrap 5
 $card-spacer-y: 1rem !default;
 $card-spacer-x: 1rem !default;
 $card-title-spacer-y: 0.5rem !default;
+$card-title-color: null !default;
+$card-subtitle-color: null !default;
 $card-cap-padding-y: 0.75rem !default;
 $card-cap-padding-x: 1rem !default;
+$card-cap-bg: rgba($black, 0.03) !default;
+$card-cap-color: null !default;
 $card-height: null !default;
+$card-color: null !default;
+$card-bg: $white !default;
+$card-img-overlay-padding: 1rem !default;
+$card-group-margin: $grid-gutter-width * 0.5 !default;
 
-// Buttons
+// Buttons - atualizados para Bootstrap 5
 $btn-padding-y: 0.5rem !default;
 $btn-padding-x: 1rem !default;
 $btn-font-family: null !default;
 $btn-font-size: $font-size-base !default;
 $btn-line-height: $line-height-base !default;
 $btn-white-space: null !default;
+$btn-padding-y-sm: 0.25rem !default;
+$btn-padding-x-sm: 0.5rem !default;
+$btn-font-size-sm: $font-size-sm !default;
+$btn-padding-y-lg: 0.75rem !default;
+$btn-padding-x-lg: 1.5rem !default;
+$btn-font-size-lg: $font-size-lg !default;
+$btn-border-width: $border-width !default;
+$btn-font-weight: $font-weight-normal !default;
+$btn-box-shadow: inset 0 1px 0 rgba($white, 0.15), 0 1px 1px rgba($black, 0.075) !default;
+$btn-focus-width: 0.2rem !default;
+$btn-focus-box-shadow: 0 0 0 $btn-focus-width rgba($component-active-bg, 0.25) !default;
+$btn-disabled-opacity: 0.65 !default;
+$btn-active-box-shadow: inset 0 3px 5px rgba($black, 0.125) !default;
 
-// Forms
+// Forms - melhoradas para Bootstrap 5
 $form-label-margin-bottom: 0.5rem !default;
 $form-label-font-size: null !default;
 $form-label-font-style: null !default;
@@ -81,8 +147,35 @@ $input-font-size: $font-size-base !default;
 $input-font-weight: $font-weight-normal !default;
 $input-line-height: $line-height-base !default;
 
+$input-padding-y-sm: 0.25rem !default;
+$input-padding-x-sm: 0.5rem !default;
+$input-font-size-sm: $font-size-sm !default;
+
+$input-padding-y-lg: 0.75rem !default;
+$input-padding-x-lg: 1rem !default;
+$input-font-size-lg: $font-size-lg !default;
+
+$input-bg: $body-bg !default;
+$input-disabled-bg: $gray-200 !default;
+$input-disabled-border-color: null !default;
+
+$input-color: $body-color !default;
+$input-border-color: $gray-400 !default;
+$input-border-width: $border-width !default;
+$input-box-shadow: $box-shadow-inset !default;
+
+$input-border-radius: $border-radius !default;
+$input-border-radius-sm: $border-radius-sm !default;
+$input-border-radius-lg: $border-radius-lg !default;
+
+$input-focus-bg: $input-bg !default;
+$input-focus-border-color: tint-color($component-active-bg, 50%) !default;
+$input-focus-color: $input-color !default;
+$input-focus-width: 0.2rem !default;
+$input-focus-box-shadow: 0 0 0 $input-focus-width rgba($component-active-bg, 0.25) !default;
+
 // ========================================================================
-// CONFIGURAÇÕES DE TIPOGRAFIA
+// CONFIGURAÇÕES DE TIPOGRAFIA (Bootstrap 5)
 // ========================================================================
 
 // Headings
@@ -93,12 +186,12 @@ $h4-font-size: $font-size-base * 1.5 !default;
 $h5-font-size: $font-size-base * 1.25 !default;
 $h6-font-size: $font-size-base !default;
 
-$headings-margin-bottom: 0.5rem !default;
+$headings-margin-bottom: $spacer * 0.5 !default;
 $headings-font-family: null !default;
 $headings-font-style: null !default;
-$headings-font-weight: $font-weight-bold !default;
+$headings-font-weight: 500 !default;
 $headings-line-height: 1.2 !default;
-$headings-color: $ufpel-primary !default;
+$headings-color: null !default;
 
 // Display headings
 $display-font-sizes: (
@@ -112,88 +205,134 @@ $display-font-sizes: (
 
 $display-font-family: null !default;
 $display-font-style: null !default;
-$display-font-weight: $font-weight-light !default;
+$display-font-weight: 300 !default;
 $display-line-height: $headings-line-height !default;
 
 // Lead text
 $lead-font-size: $font-size-base * 1.25 !default;
-$lead-font-weight: $font-weight-normal !default;
+$lead-font-weight: 300 !default;
 
 // Small text
 $small-font-size: 0.875em !default;
 
+// Text colors
+$text-muted: $gray-600 !default;
+
 // ========================================================================
-// CONFIGURAÇÕES DE CORES DE ESTADO
+// CONFIGURAÇÕES DE CORES DE ESTADO (Bootstrap 5)
 // ========================================================================
+
+// Cores do sistema atualizadas para Bootstrap 5
+$blue: #0d6efd !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #dc3545 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #198754 !default;
+$teal: #20c997 !default;
+$cyan: #0dcaf0 !default;
 
 // Success
-$success: #28a745 !default;
-$success-rgb: to-rgb($success) !default;
+$success: $green !default;
 
-// Info
+// Info - usando cor UFPel
 $info: $ufpel-secondary !default;
-$info-rgb: to-rgb($info) !default;
 
-// Warning
+// Warning - usando cor UFPel
 $warning: $ufpel-accent !default;
-$warning-rgb: to-rgb($warning) !default;
 
 // Danger
-$danger: #dc3545 !default;
-$danger-rgb: to-rgb($danger) !default;
+$danger: $red !default;
 
 // Light
-$light: #f8f9fa !default;
-$light-rgb: to-rgb($light) !default;
+$light: $gray-100 !default;
 
 // Dark
-$dark: #343a40 !default;
-$dark-rgb: to-rgb($dark) !default;
+$dark: $gray-900 !default;
+
+// Primary - usando cor UFPel
+$primary: $ufpel-primary !default;
+
+// Secondary
+$secondary: $gray-600 !default;
 
 // ========================================================================
-// CONFIGURAÇÕES DE UTILIDADES
+// CONFIGURAÇÕES DE UTILITÁRIOS (Bootstrap 5)
 // ========================================================================
 
-$utilities: (
-  "ufpel-color": (
-    property: color,
-    class: text-ufpel,
-    local-vars: (
-      "text-opacity": 1
+// API de utilitários do Bootstrap 5
+$utilities: map-merge(
+  $utilities,
+  (
+    "ufpel-color": (
+      property: color,
+      class: text-ufpel,
+      local-vars: (
+        "text-opacity": 1
+      ),
+      values: map-merge(
+        $theme-colors-rgb,
+        (
+          "primary": to-rgb($ufpel-primary),
+          "secondary": to-rgb($ufpel-secondary),
+          "accent": to-rgb($ufpel-accent),
+          "muted": to-rgb($text-muted),
+        )
+      )
     ),
-    values: (
-      "primary": rgba(var(--bs-ufpel-primary-rgb), var(--bs-text-opacity)),
-      "secondary": rgba(var(--bs-ufpel-secondary-rgb), var(--bs-text-opacity)),
-      "accent": rgba(var(--bs-ufpel-accent-rgb), var(--bs-text-opacity))
-    )
-  ),
-  "ufpel-bg": (
-    property: background-color,
-    class: bg-ufpel,
-    local-vars: (
-      "bg-opacity": 1
+    "ufpel-bg": (
+      property: background-color,
+      class: bg-ufpel,
+      local-vars: (
+        "bg-opacity": 1
+      ),
+      values: map-merge(
+        $theme-colors-rgb,
+        (
+          "primary": to-rgb($ufpel-primary),
+          "secondary": to-rgb($ufpel-secondary),
+          "accent": to-rgb($ufpel-accent),
+          "transparent": transparent,
+        )
+      )
     ),
-    values: (
-      "primary": rgba(var(--bs-ufpel-primary-rgb), var(--bs-bg-opacity)),
-      "secondary": rgba(var(--bs-ufpel-secondary-rgb), var(--bs-bg-opacity)),
-      "accent": rgba(var(--bs-ufpel-accent-rgb), var(--bs-bg-opacity))
+    "ufpel-border": (
+      property: border-color,
+      class: border-ufpel,
+      values: map-merge(
+        $theme-colors-rgb,
+        (
+          "primary": to-rgb($ufpel-primary),
+          "secondary": to-rgb($ufpel-secondary),
+          "accent": to-rgb($ufpel-accent),
+        )
+      )
     )
   )
 ) !default;
 
 // ========================================================================
-// CONFIGURAÇÕES DE ACCESSIBILIDADE
+// CONFIGURAÇÕES DE ACESSIBILIDADE (Bootstrap 5/WCAG 2.2)
 // ========================================================================
 
-// Focus ring
+// Focus ring - melhorado para Bootstrap 5
 $focus-ring-width: 0.25rem !default;
 $focus-ring-opacity: 0.25 !default;
 $focus-ring-color: rgba($ufpel-primary, $focus-ring-opacity) !default;
 $focus-ring-blur: 0 !default;
 $focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color !default;
 
+// Link colors
+$link-color: $ufpel-primary !default;
+$link-decoration: underline !default;
+$link-shade-percentage: 20% !default;
+$link-hover-color: shift-color($link-color, $link-shade-percentage) !default;
+$link-hover-decoration: null !default;
+
 // ========================================================================
-// CONFIGURAÇÕES DE MOTION E ANIMAÇÃO
+// CONFIGURAÇÕES DE MOTION E ANIMAÇÃO (Bootstrap 5)
 // ========================================================================
 
 $enable-transitions: true !default;
@@ -201,11 +340,75 @@ $transition-base: all 0.2s ease-in-out !default;
 $transition-fade: opacity 0.15s linear !default;
 $transition-collapse: height 0.35s ease !default;
 
+// Configurações de carousel
+$carousel-transition-duration: 0.6s !default;
+$carousel-transition: transform $carousel-transition-duration ease-in-out !default;
+
 // ========================================================================
-// VARIÁVEIS CSS CUSTOMIZADAS (CSS Custom Properties)
+// CONFIGURAÇÕES DE COMPONENTES ADICIONAIS (Bootstrap 5)
 // ========================================================================
 
-:root {
+// Dropdowns
+$dropdown-min-width: 10rem !default;
+$dropdown-padding-x: 0 !default;
+$dropdown-padding-y: 0.5rem !default;
+$dropdown-spacer: 0.125rem !default;
+$dropdown-font-size: $font-size-base !default;
+$dropdown-color: $body-color !default;
+$dropdown-bg: $white !default;
+$dropdown-border-color: rgba($black, 0.15) !default;
+$dropdown-border-radius: $border-radius !default;
+$dropdown-border-width: $border-width !default;
+$dropdown-inner-border-radius: subtract($dropdown-border-radius, $dropdown-border-width) !default;
+$dropdown-divider-bg: $dropdown-border-color !default;
+$dropdown-divider-margin-y: $spacer * 0.5 !default;
+$dropdown-box-shadow: $box-shadow !default;
+
+$dropdown-link-color: $gray-900 !default;
+$dropdown-link-hover-color: shade-color($gray-900, 10%) !default;
+$dropdown-link-hover-bg: $gray-200 !default;
+
+$dropdown-link-active-color: $component-active-color !default;
+$dropdown-link-active-bg: $component-active-bg !default;
+
+$dropdown-link-disabled-color: $gray-500 !default;
+
+$dropdown-item-padding-y: $spacer * 0.25 !default;
+$dropdown-item-padding-x: $spacer !default;
+
+$dropdown-header-color: $gray-600 !default;
+$dropdown-header-padding: $dropdown-padding-y $dropdown-item-padding-x !default;
+
+// Modals
+$modal-inner-padding: 1rem !default;
+$modal-footer-margin-between: 0.5rem !default;
+$modal-dialog-margin: 0.5rem !default;
+$modal-dialog-margin-y-sm-up: 1.75rem !default;
+$modal-title-line-height: $line-height-base !default;
+$modal-content-color: null !default;
+$modal-content-bg: $white !default;
+$modal-content-border-color: rgba($black, 0.2) !default;
+$modal-content-border-width: $border-width !default;
+$modal-content-border-radius: $border-radius-lg !default;
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
+$modal-content-box-shadow-xs: $box-shadow-sm !default;
+$modal-content-box-shadow-sm-up: $box-shadow !default;
+$modal-backdrop-bg: $black !default;
+$modal-backdrop-opacity: 0.5 !default;
+$modal-header-border-color: $border-color !default;
+$modal-footer-border-color: $modal-header-border-color !default;
+$modal-header-border-width: $modal-content-border-width !default;
+$modal-footer-border-width: $modal-header-border-width !default;
+$modal-header-padding-y: 1rem !default;
+$modal-header-padding-x: 1rem !default;
+$modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default;
+
+// ========================================================================
+// VARIÁVEIS CSS CUSTOMIZADAS (CSS Custom Properties) Bootstrap 5
+// ========================================================================
+
+:root,
+[data-bs-theme="light"] {
   // Cores UFPel como CSS Custom Properties
   --bs-ufpel-primary: #{$ufpel-primary};
   --bs-ufpel-primary-rgb: #{to-rgb($ufpel-primary)};
@@ -217,24 +420,90 @@ $transition-collapse: height 0.35s ease !default;
   --bs-ufpel-text: #{$ufpel-text};
   --bs-ufpel-highlight-text: #{$ufpel-highlight-text};
   
+  // Sobrescreve cores primárias do Bootstrap
+  --bs-primary: #{$ufpel-primary};
+  --bs-primary-rgb: #{to-rgb($ufpel-primary)};
+  --bs-secondary: #{$ufpel-secondary};
+  --bs-secondary-rgb: #{to-rgb($ufpel-secondary)};
+  --bs-warning: #{$ufpel-accent};
+  --bs-warning-rgb: #{to-rgb($ufpel-accent)};
+  
   // Fontes
   --bs-ufpel-font-family: #{$font-family-base};
   
   // Espaçamentos
   --bs-ufpel-navbar-height: #{$navbar-brand-height};
   --bs-ufpel-border-radius: #{$border-radius};
+  
+  // Focus ring
+  --bs-focus-ring-color: #{$focus-ring-color};
 }
 
 // ========================================================================
-// MODO ESCURO (PREPARAÇÃO PARA FUTURAS VERSÕES)
+// MODO ESCURO (Bootstrap 5 Dark Mode)
 // ========================================================================
 
+[data-bs-theme="dark"] {
+  // Ajustes de cores para modo escuro
+  --bs-ufpel-background: #{darken($ufpel-background, 70%)};
+  --bs-ufpel-text: #{lighten($ufpel-text, 40%)};
+  --bs-body-bg: var(--bs-ufpel-background);
+  --bs-body-color: var(--bs-ufpel-text);
+  --bs-ufpel-primary: #{lighten($ufpel-primary, 15%)};
+  --bs-ufpel-secondary: #{lighten($ufpel-secondary, 15%)};
+  
+  // Ajustes de componentes para modo escuro
+  --bs-card-bg: #{darken($ufpel-background, 60%)};
+  --bs-modal-bg: #{darken($ufpel-background, 60%)};
+  --bs-dropdown-bg: #{darken($ufpel-background, 60%)};
+}
+
+// Suporte alternativo para modo escuro usando media query
 @media (prefers-color-scheme: dark) {
-  :root {
-    // Ajustes de cores para modo escuro
-    --bs-ufpel-background: #1a1a2e;
-    --bs-ufpel-text: #e0e0e0;
+  :root:not([data-bs-theme]) {
+    --bs-ufpel-background: #{darken($ufpel-background, 70%)};
+    --bs-ufpel-text: #{lighten($ufpel-text, 40%)};
     --bs-body-bg: var(--bs-ufpel-background);
     --bs-body-color: var(--bs-ufpel-text);
+  }
+}
+
+// ========================================================================
+// MELHORIAS DE PERFORMANCE (Bootstrap 5)
+// ========================================================================
+
+// Otimizações para melhor performance
+$enable-smooth-scroll: true !default;
+$enable-rfs: true !default;
+
+// Configurações de font display para melhor loading
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+}
+
+// ========================================================================
+// CONFIGURAÇÕES ESPECÍFICAS MOODLE 5.x
+// ========================================================================
+
+// Ajustes específicos para componentes do Moodle 5.x
+.activity-item {
+  border-left: 3px solid var(--bs-ufpel-primary);
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-content .section {
+  border: 1px solid rgba(var(--bs-ufpel-primary-rgb), 0.1);
+  border-radius: var(--bs-border-radius);
+  margin-bottom: 1rem;
+}
+
+.course-content .activity {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background-color: rgba(var(--bs-ufpel-background-rgb, 235, 245, 255), 0.3);
+    transform: translateX(4px);
   }
 }

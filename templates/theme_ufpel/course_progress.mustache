@@ -21,12 +21,16 @@
     
     Este template renderiza uma barra de progresso visualmente atrativa
     com cores institucionais e informações de conclusão do curso.
+    Compatível com Moodle 5.x e padrões WCAG 2.2.
     
     Variáveis do contexto:
     * courseid - ID do curso
     * has_progress - Flag indicando se há dados de progresso
     * progress_percentage - Porcentagem de conclusão (0-100)
     * progress_class - Classe CSS baseada no nível de progresso
+    * completed_activities - Número de atividades concluídas
+    * total_activities - Total de atividades
+    * progress_25_reached, progress_50_reached, progress_75_reached, progress_100_reached - Marcos atingidos
 
     @package theme_ufpel
     @copyright 2025 Universidade Federal de Pelotas
@@ -34,23 +38,34 @@
 }}
 
 {{#has_progress}}
-<div class="ufpel-course-progress-container mb-4" role="region" aria-label="{{#str}}courseprogress, theme_ufpel{{/str}}">
+<div class="ufpel-course-progress-container mb-4" 
+     role="region" 
+     aria-label="{{#str}}courseprogress, theme_ufpel{{/str}}">
     
     {{! Cabeçalho da seção de progresso }}
-    <div class="ufpel-progress-header d-flex justify-content-between align-items-center mb-2">
-        <h3 class="h6 mb-0 text-ufpel-primary fw-semibold">
-            <i class="fa fa-chart-line me-2" aria-hidden="true"></i>
+    <div class="ufpel-progress-header d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h6 mb-0 text-primary fw-bold d-flex align-items-center">
+            <i class="fa fa-chart-line me-2 text-primary" aria-hidden="true"></i>
             {{#str}}courseprogress, theme_ufpel{{/str}}
         </h3>
         
-        <span class="badge {{progress_class}} fw-bold" 
-              aria-label="{{#str}}progresspercentage, theme_ufpel{{/str}}: {{progress_percentage}}%">
-            {{progress_percentage}}%
-        </span>
+        <div class="ufpel-progress-badges d-flex gap-2">
+            <span class="badge {{progress_class}} fw-bold px-3 py-2" 
+                  aria-label="{{#str}}progresspercentage, theme_ufpel{{/str}}: {{progress_percentage}}%">
+                {{progress_percentage}}%
+            </span>
+            
+            {{#progress_100_reached}}
+            <span class="badge bg-success fw-bold px-3 py-2" title="{{#str}}coursecompleted, theme_ufpel{{/str}}">
+                <i class="fa fa-trophy me-1" aria-hidden="true"></i>
+                {{#str}}completed, theme_ufpel{{/str}}
+            </span>
+            {{/progress_100_reached}}
+        </div>
     </div>
     
     {{! Barra de progresso principal }}
-    <div class="ufpel-progress-wrapper position-relative">
+    <div class="ufpel-progress-wrapper position-relative mb-3">
         <div class="progress ufpel-progress-bar" 
              role="progressbar" 
              aria-valuenow="{{progress_percentage}}" 
@@ -58,7 +73,7 @@
              aria-valuemax="100"
              aria-label="{{#str}}courseprogress, theme_ufpel{{/str}}: {{progress_percentage}}%">
             
-            <div class="progress-bar {{progress_class}} progress-bar-striped progress-bar-animated" 
+            <div class="progress-bar {{progress_class}} progress-bar-striped {{^progress_100_reached}}progress-bar-animated{{/progress_100_reached}}" 
                  style="width: {{progress_percentage}}%"
                  data-progress="{{progress_percentage}}">
                 
@@ -74,142 +89,240 @@
         </div>
         
         {{! Marcadores de milestone }}
-        <div class="ufpel-progress-milestones">
-            <div class="milestone" style="left: 25%" title="{{#str}}milestone25, theme_ufpel{{/str}}">
-                <div class="milestone-marker {{#progress_25_reached}}reached{{/progress_25_reached}}"></div>
+        <div class="ufpel-progress-milestones" aria-hidden="true">
+            <div class="milestone" style="left: 25%" data-milestone="25">
+                <div class="milestone-marker {{#progress_25_reached}}reached{{/progress_25_reached}}" 
+                     title="{{#str}}milestone25, theme_ufpel{{/str}}"></div>
             </div>
-            <div class="milestone" style="left: 50%" title="{{#str}}milestone50, theme_ufpel{{/str}}">
-                <div class="milestone-marker {{#progress_50_reached}}reached{{/progress_50_reached}}"></div>
+            <div class="milestone" style="left: 50%" data-milestone="50">
+                <div class="milestone-marker {{#progress_50_reached}}reached{{/progress_50_reached}}" 
+                     title="{{#str}}milestone50, theme_ufpel{{/str}}"></div>
             </div>
-            <div class="milestone" style="left: 75%" title="{{#str}}milestone75, theme_ufpel{{/str}}">
-                <div class="milestone-marker {{#progress_75_reached}}reached{{/progress_75_reached}}"></div>
+            <div class="milestone" style="left: 75%" data-milestone="75">
+                <div class="milestone-marker {{#progress_75_reached}}reached{{/progress_75_reached}}" 
+                     title="{{#str}}milestone75, theme_ufpel{{/str}}"></div>
             </div>
-            <div class="milestone" style="left: 100%" title="{{#str}}milestone100, theme_ufpel{{/str}}">
-                <div class="milestone-marker {{#progress_100_reached}}reached{{/progress_100_reached}}"></div>
+            <div class="milestone" style="left: 100%" data-milestone="100">
+                <div class="milestone-marker {{#progress_100_reached}}reached{{/progress_100_reached}}" 
+                     title="{{#str}}milestone100, theme_ufpel{{/str}}"></div>
             </div>
         </div>
     </div>
     
     {{! Informações detalhadas de progresso }}
-    <div class="ufpel-progress-details mt-3">
-        <div class="row g-2 small text-muted">
+    <div class="ufpel-progress-details">
+        <div class="row g-3">
             
             {{! Atividades concluídas }}
             {{#completed_activities}}
-            <div class="col-6 col-md-3">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-check-circle text-success me-1" aria-hidden="true"></i>
-                    <span>{{completed_activities}} {{#str}}completed, theme_ufpel{{/str}}</span>
+            <div class="col-sm-6 col-lg-3">
+                <div class="ufpel-progress-stat text-center p-3 bg-light rounded">
+                    <div class="ufpel-progress-stat-icon mb-2">
+                        <i class="fa fa-check-circle text-success fs-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="ufpel-progress-stat-number h4 mb-1 text-success fw-bold">
+                        {{completed_activities}}
+                    </div>
+                    <div class="ufpel-progress-stat-label small text-muted">
+                        {{#str}}completed, theme_ufpel{{/str}}
+                    </div>
                 </div>
             </div>
             {{/completed_activities}}
             
             {{! Total de atividades }}
             {{#total_activities}}
-            <div class="col-6 col-md-3">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-list text-info me-1" aria-hidden="true"></i>
-                    <span>{{total_activities}} {{#str}}total, theme_ufpel{{/str}}</span>
+            <div class="col-sm-6 col-lg-3">
+                <div class="ufpel-progress-stat text-center p-3 bg-light rounded">
+                    <div class="ufpel-progress-stat-icon mb-2">
+                        <i class="fa fa-list text-info fs-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="ufpel-progress-stat-number h4 mb-1 text-info fw-bold">
+                        {{total_activities}}
+                    </div>
+                    <div class="ufpel-progress-stat-label small text-muted">
+                        {{#str}}total, theme_ufpel{{/str}}
+                    </div>
                 </div>
             </div>
             {{/total_activities}}
             
+            {{! Atividades restantes }}
+            {{#remaining_activities}}
+            <div class="col-sm-6 col-lg-3">
+                <div class="ufpel-progress-stat text-center p-3 bg-light rounded">
+                    <div class="ufpel-progress-stat-icon mb-2">
+                        <i class="fa fa-clock text-warning fs-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="ufpel-progress-stat-number h4 mb-1 text-warning fw-bold">
+                        {{remaining_activities}}
+                    </div>
+                    <div class="ufpel-progress-stat-label small text-muted">
+                        {{#str}}remaining, theme_ufpel{{/str}}
+                    </div>
+                </div>
+            </div>
+            {{/remaining_activities}}
+            
             {{! Tempo estimado restante }}
             {{#estimated_time}}
-            <div class="col-6 col-md-3">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-clock text-warning me-1" aria-hidden="true"></i>
-                    <span>{{estimated_time}} {{#str}}remaining, theme_ufpel{{/str}}</span>
+            <div class="col-sm-6 col-lg-3">
+                <div class="ufpel-progress-stat text-center p-3 bg-light rounded">
+                    <div class="ufpel-progress-stat-icon mb-2">
+                        <i class="fa fa-hourglass-half text-primary fs-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="ufpel-progress-stat-number h5 mb-1 text-primary fw-bold">
+                        {{estimated_time}}
+                    </div>
+                    <div class="ufpel-progress-stat-label small text-muted">
+                        {{#str}}remaining, theme_ufpel{{/str}}
+                    </div>
                 </div>
             </div>
             {{/estimated_time}}
-            
-            {{! Data de conclusão prevista }}
-            {{#completion_date}}
-            <div class="col-6 col-md-3">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-calendar text-primary me-1" aria-hidden="true"></i>
-                    <span>{{completion_date}}</span>
-                </div>
-            </div>
-            {{/completion_date}}
         </div>
     </div>
     
     {{! Mensagem motivacional baseada no progresso }}
     {{#progress_message}}
-    <div class="ufpel-progress-message mt-3 p-3 rounded {{progress_message_class}}">
+    <div class="ufpel-progress-message mt-4 p-4 rounded-3 {{progress_message_class}}" role="alert">
         <div class="d-flex align-items-start">
-            <i class="{{progress_message_icon}} me-2 mt-1" aria-hidden="true"></i>
+            <div class="ufpel-progress-message-icon me-3 fs-3">
+                <i class="{{progress_message_icon}}" aria-hidden="true"></i>
+            </div>
             <div class="flex-grow-1">
-                <strong>{{progress_message_title}}</strong>
-                <p class="mb-0 small">{{progress_message_text}}</p>
+                <h4 class="ufpel-progress-message-title h6 fw-bold mb-2">
+                    {{progress_message_title}}
+                </h4>
+                <p class="ufpel-progress-message-text mb-0">
+                    {{progress_message_text}}
+                </p>
+                {{#progress_message_action}}
+                <div class="mt-3">
+                    <a href="{{progress_message_action_url}}" 
+                       class="btn btn-sm {{progress_message_action_class}}">
+                        {{progress_message_action}}
+                    </a>
+                </div>
+                {{/progress_message_action}}
             </div>
         </div>
     </div>
     {{/progress_message}}
+    
+    {{! Últimas atividades concluídas }}
+    {{#recent_completions}}
+    <div class="ufpel-recent-completions mt-4">
+        <h4 class="h6 text-primary mb-3 fw-bold">
+            <i class="fa fa-history me-2" aria-hidden="true"></i>
+            {{#str}}recentcompletions, theme_ufpel{{/str}}
+        </h4>
+        <div class="ufpel-completion-list">
+            {{#recent_completions}}
+            <div class="ufpel-completion-item d-flex align-items-center p-2 rounded mb-2 bg-light">
+                <div class="ufpel-completion-icon me-3">
+                    <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="ufpel-completion-name fw-medium">{{activity_name}}</div>
+                    <div class="ufpel-completion-date small text-muted">{{completion_date}}</div>
+                </div>
+                <div class="ufpel-completion-badge">
+                    <span class="badge bg-success rounded-pill">
+                        <i class="fa fa-star me-1" aria-hidden="true"></i>
+                        {{completion_score}}
+                    </span>
+                </div>
+            </div>
+            {{/recent_completions}}
+        </div>
+    </div>
+    {{/recent_completions}}
 </div>
 
 {{! CSS específico para o componente de progresso }}
 <style>
 .ufpel-course-progress-container {
-    background: linear-gradient(135deg, rgba(0, 64, 143, 0.03) 0%, rgba(0, 128, 255, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(0, 64, 143, 0.02) 0%, rgba(0, 128, 255, 0.02) 100%);
     border: 1px solid rgba(0, 64, 143, 0.1);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.ufpel-course-progress-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00408F, #0080FF, #F7A600);
 }
 
 .ufpel-progress-bar {
-    height: 1.5rem;
+    height: 2rem;
     background-color: rgba(0, 64, 143, 0.1);
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     overflow: visible;
     position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ufpel-progress-bar .progress-bar {
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     position: relative;
-    transition: width 0.6s ease;
+    transition: width 1s ease-in-out;
+    background-size: 2rem 2rem;
+    overflow: hidden;
 }
 
 /* Classes de progresso baseadas em níveis */
 .ufpel-progress-complete {
     background: linear-gradient(90deg, #28a745, #20c997) !important;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 .ufpel-progress-high {
     background: linear-gradient(90deg, #0080FF, #00408F) !important;
+    box-shadow: 0 4px 8px rgba(0, 128, 255, 0.3);
 }
 
 .ufpel-progress-medium {
     background: linear-gradient(90deg, #F7A600, #ff8c00) !important;
+    box-shadow: 0 4px 8px rgba(247, 166, 0, 0.3);
 }
 
 .ufpel-progress-low {
     background: linear-gradient(90deg, #dc3545, #c82333) !important;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
 /* Badges de progresso */
 .badge.ufpel-progress-complete {
-    background-color: #28a745 !important;
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
     color: white;
+    border: none;
 }
 
 .badge.ufpel-progress-high {
-    background-color: #0080FF !important;
+    background: linear-gradient(135deg, #0080FF, #00408F) !important;
     color: white;
+    border: none;
 }
 
 .badge.ufpel-progress-medium {
-    background-color: #F7A600 !important;
+    background: linear-gradient(135deg, #F7A600, #ff8c00) !important;
     color: #343a40;
+    border: none;
 }
 
 .badge.ufpel-progress-low {
-    background-color: #dc3545 !important;
+    background: linear-gradient(135deg, #dc3545, #c82333) !important;
     color: white;
+    border: none;
 }
 
 /* Texto dentro da barra de progresso */
@@ -217,112 +330,250 @@
     position: absolute;
     width: 100%;
     text-align: center;
-    line-height: 1.5rem;
+    line-height: 2rem;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    font-weight: 700;
 }
 
 /* Milestones */
 .ufpel-progress-milestones {
     position: absolute;
-    top: 0;
+    top: -4px;
     width: 100%;
-    height: 100%;
+    height: calc(100% + 8px);
     pointer-events: none;
 }
 
 .milestone {
     position: absolute;
-    top: -2px;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .milestone-marker {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
     background-color: #dee2e6;
-    border: 2px solid #fff;
+    border: 3px solid #fff;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .milestone-marker.reached {
     background-color: #00408F;
-    transform: scale(1.2);
-    box-shadow: 0 0 0 2px rgba(0, 64, 143, 0.3);
+    transform: scale(1.3);
+    box-shadow: 0 0 0 4px rgba(0, 64, 143, 0.2), 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: milestone-pulse 0.6s ease-out;
+}
+
+@keyframes milestone-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1.3); }
+}
+
+/* Estatísticas de progresso */
+.ufpel-progress-stat {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 64, 143, 0.1);
+    background: linear-gradient(135deg, #fff 0%, rgba(0, 64, 143, 0.02) 100%);
+}
+
+.ufpel-progress-stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 64, 143, 0.2);
+}
+
+.ufpel-progress-stat-icon {
+    transition: transform 0.3s ease;
+}
+
+.ufpel-progress-stat:hover .ufpel-progress-stat-icon {
+    transform: scale(1.1);
 }
 
 /* Mensagens motivacionais */
 .ufpel-progress-message {
-    font-size: 0.9rem;
+    border-left: 4px solid;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%);
+    backdrop-filter: blur(5px);
+    border-radius: 0.75rem !important;
 }
 
 .ufpel-progress-message.alert-success {
-    background-color: rgba(40, 167, 69, 0.1);
-    border-left: 4px solid #28a745;
-    color: #155724;
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.05) 0%, rgba(32, 201, 151, 0.05) 100%);
 }
 
 .ufpel-progress-message.alert-info {
-    background-color: rgba(0, 128, 255, 0.1);
-    border-left: 4px solid #0080FF;
-    color: #004085;
+    border-left-color: #0080FF;
+    background: linear-gradient(135deg, rgba(0, 128, 255, 0.05) 0%, rgba(0, 64, 143, 0.05) 100%);
 }
 
 .ufpel-progress-message.alert-warning {
-    background-color: rgba(247, 166, 0, 0.1);
-    border-left: 4px solid #F7A600;
-    color: #856404;
+    border-left-color: #F7A600;
+    background: linear-gradient(135deg, rgba(247, 166, 0, 0.05) 0%, rgba(255, 140, 0, 0.05) 100%);
+}
+
+.ufpel-progress-message-icon {
+    color: inherit;
+    opacity: 0.8;
+}
+
+.ufpel-progress-message-title {
+    color: inherit;
+    margin-bottom: 0.5rem;
+}
+
+/* Conclusões recentes */
+.ufpel-completion-item {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.ufpel-completion-item:hover {
+    transform: translateX(8px);
+    border-color: rgba(0, 64, 143, 0.2);
+    background: linear-gradient(135deg, rgba(0, 64, 143, 0.05) 0%, rgba(0, 128, 255, 0.05) 100%) !important;
 }
 
 /* Responsividade */
+@media (max-width: 768px) {
+    .ufpel-course-progress-container {
+        padding: 1.5rem;
+    }
+    
+    .ufpel-progress-details .row {
+        --bs-gutter-x: 1rem;
+    }
+    
+    .ufpel-progress-stat {
+        padding: 1.5rem !important;
+    }
+    
+    .milestone-marker {
+        width: 10px;
+        height: 10px;
+        border-width: 2px;
+    }
+    
+    .ufpel-progress-badges {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem !important;
+    }
+}
+
 @media (max-width: 576px) {
     .ufpel-course-progress-container {
         padding: 1rem;
     }
     
-    .ufpel-progress-details .row {
-        font-size: 0.8rem;
+    .ufpel-progress-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
     
-    .milestone-marker {
-        width: 6px;
-        height: 6px;
+    .ufpel-progress-badges {
+        align-self: stretch;
+        justify-content: center;
     }
-}
-
-/* Animações */
-@keyframes progressFill {
-    from {
-        width: 0%;
+    
+    .ufpel-progress-message {
+        padding: 1rem !important;
     }
-}
-
-.ufpel-progress-bar .progress-bar {
-    animation: progressFill 1.5s ease-out;
+    
+    .ufpel-progress-message .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .ufpel-progress-message-icon {
+        margin-bottom: 1rem;
+        margin-right: 0 !important;
+    }
 }
 
 /* Alto contraste */
 @media (prefers-contrast: high) {
     .ufpel-course-progress-container {
         border: 2px solid #00408F;
+        background: #fff;
+    }
+    
+    .ufpel-progress-bar {
+        border: 2px solid #00408F;
     }
     
     .milestone-marker {
-        border-width: 3px;
+        border-width: 4px;
+    }
+    
+    .ufpel-progress-stat {
+        border: 2px solid #00408F;
     }
 }
 
 /* Movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
     .ufpel-progress-bar .progress-bar,
-    .milestone-marker {
+    .milestone-marker,
+    .ufpel-progress-stat,
+    .ufpel-completion-item {
         transition: none;
         animation: none;
     }
     
     .progress-bar-animated {
         animation: none;
+    }
+    
+    .ufpel-progress-stat:hover,
+    .ufpel-completion-item:hover {
+        transform: none;
+    }
+    
+    .milestone-marker.reached {
+        animation: none;
+        transform: scale(1.3);
+    }
+}
+
+/* Melhorias de acessibilidade */
+.ufpel-progress-bar:focus-within {
+    outline: 2px solid #F7A600;
+    outline-offset: 2px;
+}
+
+.ufpel-progress-message:focus-within {
+    outline: 2px solid #F7A600;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .ufpel-course-progress-container {
+        background: none !important;
+        border: 2px solid #000;
+        break-inside: avoid;
+    }
+    
+    .ufpel-progress-bar {
+        background: #f0f0f0 !important;
+        box-shadow: none;
+    }
+    
+    .ufpel-progress-bar .progress-bar {
+        background: #000 !important;
+    }
+    
+    .milestone-marker {
+        background: #000 !important;
+        border-color: #fff !important;
     }
 }
 </style>

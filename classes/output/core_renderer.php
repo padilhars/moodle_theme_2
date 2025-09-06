@@ -18,7 +18,7 @@
  * Renderer principal do tema UFPel
  *
  * Este arquivo contém o renderer principal que herda do tema Boost
- * e implementa customizações específicas do tema UFPel.
+ * e implementa customizações específicas do tema UFPel para Moodle 5.x.
  *
  * @package    theme_ufpel
  * @copyright  2025 Universidade Federal de Pelotas
@@ -27,23 +27,13 @@
 
 namespace theme_ufpel\output;
 
-use coding_exception;
-use html_writer;
-use tabobject;
-use tabtree;
-use custom_menu_item;
-use custom_menu;
-use core_block\output\block_contents;
-use navigation_node;
-use action_link;
 use stdClass;
 use moodle_url;
-use preferences_groups;
-use action_menu;
-use help_icon;
-use single_button;
-use paging_bar;
+use context_system;
 use context_course;
+use core\output\notification;
+use action_link;
+use single_button;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -51,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
  * Renderer principal personalizado para o tema UFPel
  *
  * Herda todas as funcionalidades do renderer do tema Boost
- * e adiciona customizações específicas da UFPel.
+ * e adiciona customizações específicas da UFPel para Moodle 5.x.
  */
 class core_renderer extends \theme_boost\output\core_renderer {
 
@@ -73,7 +63,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context->homeurl = new moodle_url('/');
         
         // Nome do site
-        $context->sitename = format_string($SITE->shortname, true, ['context' => \context_system::instance()]);
+        $context->sitename = format_string($SITE->shortname, true, ['context' => context_system::instance()]);
         
         // URL do logotipo personalizado (se configurado)
         $logourl = $this->get_ufpel_logo_url();
@@ -107,7 +97,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML do cabeçalho renderizado
      */
     public function standard_head_html() {
-        global $CFG, $SESSION;
+        global $CFG;
 
         // Obtém o HTML padrão do cabeçalho
         $output = parent::standard_head_html();
@@ -150,15 +140,13 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML do rodapé renderizado
      */
     public function standard_footer_html() {
-        global $CFG;
-
         $output = parent::standard_footer_html();
         
         // Adiciona informações institucionais UFPel
-        $ufpel_footer = $this->render_ufpel_footer_info();
+        $ufpelfooter = $this->render_ufpel_footer_info();
         
         // Insere as informações UFPel antes do fechamento do rodapé
-        $output = str_replace('</footer>', $ufpel_footer . '</footer>', $output);
+        $output = str_replace('</footer>', $ufpelfooter . '</footer>', $output);
 
         return $output;
     }
@@ -173,34 +161,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context->current_year = date('Y');
         $context->institution_name = 'Universidade Federal de Pelotas';
         $context->institution_url = 'https://ufpel.edu.br';
-        $context->currentmonth => userdate(time(), '%B');
+        $context->currentmonth = userdate(time(), '%B');
         
         return $this->render_from_template('theme_ufpel/footer_info', $context);
-    }
-
-    /**
-     * Renderiza blocos com estilos aprimorados UFPel
-     *
-     * Sobrescreve a renderização de blocos para aplicar
-     * estilos personalizados do tema UFPel.
-     *
-     * @param block_contents $bc Conteúdo do bloco
-     * @return string HTML do bloco renderizado
-     */
-    public function block(block_contents $bc, $region) {
-        // Adiciona classes CSS específicas do tema UFPel
-        if (!empty($bc->attributes['class'])) {
-            $bc->attributes['class'] .= ' ufpel-block';
-        } else {
-            $bc->attributes['class'] = 'ufpel-block';
-        }
-
-        // Adiciona cores institucionais baseadas no tipo de bloco
-        if (!empty($bc->blockinstanceid)) {
-            $bc->attributes['class'] .= ' ufpel-block-styled';
-        }
-
-        return parent::block($bc, $region);
     }
 
     /**
@@ -209,10 +172,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * Aplica cores e estilos institucionais às mensagens
      * de notificação do sistema.
      *
-     * @param \core\output\notification $notification A notificação
+     * @param notification $notification A notificação
      * @return string HTML da notificação renderizada
      */
-    public function render_notification(\core\output\notification $notification) {
+    public function render_notification(notification $notification) {
         $output = parent::render_notification($notification);
         
         // Adiciona classes específicas do tema UFPel para diferentes tipos de notificação
@@ -241,8 +204,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
      */
     public function render_action_link(action_link $link) {
         // Adiciona classes CSS específicas do tema UFPel
-        $existing_classes = $link->attributes['class'] ?? '';
-        $link->attributes['class'] = trim($existing_classes . ' ufpel-action-link');
+        $existingclasses = $link->attributes['class'] ?? '';
+        $link->attributes['class'] = trim($existingclasses . ' ufpel-action-link');
 
         return parent::render_action_link($link);
     }
@@ -270,19 +233,112 @@ class core_renderer extends \theme_boost\output\core_renderer {
     }
 
     /**
-     * Adiciona contexto específico do tema UFPel aos templates Mustache
+     * Renderiza o menu principal de navegação
      *
-     * Este método é chamado automaticamente pelo sistema de templates
-     * para adicionar variáveis específicas do tema aos contextos.
+     * Sobrescreve para aplicar estilos específicos do tema UFPel.
      *
-     * @param array $context Contexto existente do template
-     * @return array Contexto atualizado com dados UFPel
+     * @param custom_menu $menu
+     * @return string
      */
-    public function mustache_template_context($context) {
+    protected function render_custom_menu(custom_menu $menu) {
+        $output = parent::render_custom_menu($menu);
+        
+        // Adiciona classes específicas do tema UFPel
+        $output = str_replace('class="custom-menu"', 'class="custom-menu ufpel-custom-menu"', $output);
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza o seletor de idiomas
+     *
+     * Aplica estilos UFPel ao seletor de idiomas.
+     *
+     * @return string HTML do seletor de idiomas
+     */
+    public function lang_menu() {
+        $output = parent::lang_menu();
+        
+        if (!empty($output)) {
+            $output = str_replace('class="langmenu"', 'class="langmenu ufpel-langmenu"', $output);
+        }
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza o menu do usuário
+     *
+     * Aplica customizações UFPel ao menu do usuário.
+     *
+     * @param stdClass $user
+     * @param bool $withlinks
+     * @return string
+     */
+    public function user_menu($user = null, $withlinks = null) {
+        $output = parent::user_menu($user, $withlinks);
+        
+        // Adiciona classes específicas do tema UFPel
+        $output = str_replace('class="usermenu"', 'class="usermenu ufpel-usermenu"', $output);
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza a página de login
+     *
+     * Adiciona elementos visuais específicos do tema UFPel à página de login.
+     *
+     * @return string HTML da página de login
+     */
+    public function render_login() {
+        global $CFG;
+        
+        $output = parent::render_login();
+        
+        // Adiciona logo institucional se configurado
+        $logourl = $this->get_ufpel_logo_url();
+        if ($logourl) {
+            $logoelement = '<div class="ufpel-login-logo text-center mb-4">';
+            $logoelement .= '<img src="' . $logourl . '" alt="UFPel" class="img-fluid" style="max-height: 80px;">';
+            $logoelement .= '</div>';
+            
+            // Insere o logo antes do formulário de login
+            $output = str_replace('<form', $logoelement . '<form', $output);
+        }
+        
+        return $output;
+    }
+
+    /**
+     * Renderiza breadcrumbs personalizados
+     *
+     * Aplica estilos institucionais aos breadcrumbs.
+     *
+     * @return string HTML dos breadcrumbs
+     */
+    public function navbar() {
+        $output = parent::navbar();
+        
+        // Adiciona classes CSS específicas do tema UFPel
+        $output = str_replace('class="breadcrumb"', 'class="breadcrumb ufpel-breadcrumb"', $output);
+        
+        return $output;
+    }
+
+    /**
+     * Adiciona configurações específicas do tema UFPel ao contexto de templates
+     *
+     * Método compatível com Moodle 5.x para adicionar dados aos templates.
+     *
+     * @param array $context Contexto existente
+     * @return array Contexto atualizado
+     */
+    public function get_template_context_vars($context = []) {
         global $COURSE, $SITE;
 
         // Obtém o contexto padrão do tema pai
-        $context = parent::mustache_template_context($context);
+        $context = parent::get_template_context_vars($context);
 
         // Adiciona configurações do tema UFPel
         $context['ufpel_primary_color'] = get_config('theme_ufpel', 'primarycolor') ?: '#00408F';
@@ -294,8 +350,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $context['ufpel_favicon'] = $this->get_ufpel_favicon_url();
         
         // Adiciona informações do site
-        $context['sitename'] = format_string($SITE->shortname, true, ['context' => \context_system::instance()]);
-        $context['sitefullname'] = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
+        $context['sitename'] = format_string($SITE->shortname, true, ['context' => context_system::instance()]);
+        $context['sitefullname'] = format_string($SITE->fullname, true, ['context' => context_system::instance()]);
         
         // Adiciona flags de configuração
         $context['enablecourseheader'] = get_config('theme_ufpel', 'enablecourseheader') ?? true;

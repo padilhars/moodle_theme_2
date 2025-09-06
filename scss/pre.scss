@@ -3,7 +3,7 @@
  * 
  * Este arquivo contém as configurações iniciais de SCSS que são
  * aplicadas antes do preset principal. Define variáveis, mixins
- * e configurações base do tema UFPel.
+ * e configurações base do tema UFPel compatíveis com Moodle 5.x.
  *
  * @package    theme_ufpel
  * @copyright  2025 Universidade Federal de Pelotas
@@ -22,37 +22,58 @@ $ufpel-background: #EBF5FF !default;   // Fundo azul claro
 $ufpel-text: #6C6B6B !default;         // Cinza para texto
 $ufpel-highlight-text: #FFFFFF !default; // Branco para texto em destaque
 
+// Cores de sistema adicionais
+$ufpel-success: #28a745 !default;      // Verde para sucesso
+$ufpel-info: #17a2b8 !default;         // Azul para informação
+$ufpel-warning: #F7A600 !default;      // Amarelo para avisos
+$ufpel-danger: #dc3545 !default;       // Vermelho para perigo
+
 // Sobrescreve variáveis do Bootstrap com as cores UFPel
 $primary: $ufpel-primary;
 $secondary: $ufpel-secondary;
-$warning: $ufpel-accent;
+$success: $ufpel-success;
+$info: $ufpel-info;
+$warning: $ufpel-warning;
+$danger: $ufpel-danger;
 $body-bg: $ufpel-background;
 $body-color: $ufpel-text;
 
 // ========================================================================
-// VARIÁVEIS DE TIPOGRAFIA
+// VARIÁVEIS DE TIPOGRAFIA (Moodle 5.x)
 // ========================================================================
 
-// Fontes institucionais
-$font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+// Fontes institucionais compatíveis com Moodle 5.x
+$font-family-sans-serif: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif !default;
 $font-family-base: $font-family-sans-serif !default;
 
+// Importação de fonte externa (opcional)
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 // Tamanhos de fonte responsivos
+$font-size-root: 16px !default;
 $font-size-base: 1rem !default;
 $font-size-lg: 1.125rem !default;
 $font-size-sm: 0.875rem !default;
 
 // Pesos de fonte
+$font-weight-lighter: 300 !default;
 $font-weight-light: 300 !default;
 $font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
 $font-weight-semibold: 600 !default;
 $font-weight-bold: 700 !default;
+$font-weight-bolder: 700 !default;
+
+// Line heights
+$line-height-base: 1.6 !default;
+$line-height-sm: 1.4 !default;
+$line-height-lg: 1.8 !default;
 
 // ========================================================================
-// VARIÁVEIS DE ESPAÇAMENTO E LAYOUT
+// VARIÁVEIS DE ESPAÇAMENTO E LAYOUT (Moodle 5.x)
 // ========================================================================
 
-// Container e grid
+// Container e grid - atualizados para Bootstrap 5
 $container-max-widths: (
   sm: 540px,
   md: 720px,
@@ -61,75 +82,217 @@ $container-max-widths: (
   xxl: 1320px
 ) !default;
 
+// Spacing scale
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4,
+  7: $spacer * 5,
+  8: $spacer * 6
+) !default;
+
 // Bordas e arredondamento
+$border-width: 1px !default;
 $border-radius: 0.375rem !default;
 $border-radius-sm: 0.25rem !default;
 $border-radius-lg: 0.5rem !default;
+$border-radius-xl: 1rem !default;
+$border-radius-2xl: 1.5rem !default;
 
 // Sombras para acessibilidade e profundidade visual
-$box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !default;
-$box-shadow-sm: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.075) !default;
-$box-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !default;
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !default;
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !default;
+$box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175) !default;
+$box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075) !default;
 
 // ========================================================================
-// VARIÁVEIS DE COMPONENTES
+// VARIÁVEIS DE COMPONENTES (Moodle 5.x)
 // ========================================================================
 
-// Navbar
+// Navbar - atualizadas para Moodle 5.x
 $navbar-padding-y: 1rem !default;
 $navbar-padding-x: 1rem !default;
+$navbar-nav-link-padding-x: 1rem !default;
 $navbar-brand-font-size: 1.5rem !default;
 $navbar-brand-height: 3rem !default;
+$navbar-brand-padding-y: 0.5rem !default;
 
-// Cards
+// Cards - melhoradas para Moodle 5.x
+$card-spacer-y: 1rem !default;
+$card-spacer-x: 1rem !default;
+$card-title-spacer-y: 0.5rem !default;
 $card-border-width: 1px !default;
 $card-border-color: rgba($ufpel-primary, 0.125) !default;
 $card-border-radius: $border-radius !default;
-$card-box-shadow: $box-shadow !default;
+$card-box-shadow: $box-shadow-sm !default;
+$card-cap-padding-y: 0.75rem !default;
+$card-cap-padding-x: 1rem !default;
 
-// Botões
+// Botões - atualizados para Moodle 5.x
+$btn-padding-y: 0.5rem !default;
+$btn-padding-x: 1rem !default;
+$btn-padding-y-sm: 0.25rem !default;
+$btn-padding-x-sm: 0.5rem !default;
+$btn-padding-y-lg: 0.75rem !default;
+$btn-padding-x-lg: 1.5rem !default;
+$btn-font-family: null !default;
+$btn-font-size: $font-size-base !default;
+$btn-line-height: $line-height-base !default;
+$btn-white-space: null !default;
 $btn-border-radius: $border-radius !default;
 $btn-font-weight: $font-weight-semibold !default;
 $btn-focus-box-shadow: 0 0 0 0.2rem rgba($ufpel-primary, 0.25) !default;
 
-// Links
-$link-color: $ufpel-primary !default;
-$link-hover-color: darken($ufpel-primary, 15%) !default;
-$link-decoration: none !default;
-$link-hover-decoration: underline !default;
+// Forms - melhoradas para Moodle 5.x
+$form-label-margin-bottom: 0.5rem !default;
+$form-label-font-size: null !default;
+$form-label-font-style: null !default;
+$form-label-font-weight: $font-weight-semibold !default;
+$form-label-color: $ufpel-text !default;
+
+$input-padding-y: 0.5rem !default;
+$input-padding-x: 0.75rem !default;
+$input-font-family: null !default;
+$input-font-size: $font-size-base !default;
+$input-font-weight: $font-weight-normal !default;
+$input-line-height: $line-height-base !default;
+$input-bg: $body-bg !default;
+$input-disabled-bg: rgba($ufpel-text, 0.1) !default;
+$input-border-color: rgba($ufpel-primary, 0.25) !default;
+$input-border-width: $border-width !default;
+$input-border-radius: $border-radius !default;
+$input-focus-border-color: $ufpel-primary !default;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba($ufpel-primary, 0.25) !default;
+
+// ========================================================================
+// VARIÁVEIS DE TIPOGRAFIA RESPONSIVA
+// ========================================================================
+
+// Headings - otimizadas para Moodle 5.x
+$h1-font-size: $font-size-base * 2.5 !default;
+$h2-font-size: $font-size-base * 2 !default;
+$h3-font-size: $font-size-base * 1.75 !default;
+$h4-font-size: $font-size-base * 1.5 !default;
+$h5-font-size: $font-size-base * 1.25 !default;
+$h6-font-size: $font-size-base !default;
+
+$headings-margin-bottom: 0.5rem !default;
+$headings-font-family: null !default;
+$headings-font-style: null !default;
+$headings-font-weight: $font-weight-bold !default;
+$headings-line-height: 1.2 !default;
+$headings-color: $ufpel-primary !default;
+
+// Display headings
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 4rem,
+  4: 3.5rem,
+  5: 3rem,
+  6: 2.5rem
+) !default;
+
+$display-font-family: null !default;
+$display-font-style: null !default;
+$display-font-weight: $font-weight-light !default;
+$display-line-height: $headings-line-height !default;
+
+// Lead text
+$lead-font-size: $font-size-base * 1.25 !default;
+$lead-font-weight: $font-weight-normal !default;
+
+// Small text
+$small-font-size: 0.875em !default;
 
 // ========================================================================
 // MIXINS PERSONALIZADOS UFPel
 // ========================================================================
 
 // Mixin para gradiente institucional
-@mixin ufpel-gradient($direction: to right) {
-  background: linear-gradient($direction, $ufpel-primary, $ufpel-secondary);
+@mixin ufpel-gradient($direction: to right, $opacity: 1) {
+  background: linear-gradient($direction, 
+    rgba($ufpel-primary, $opacity), 
+    rgba($ufpel-secondary, $opacity));
 }
 
-// Mixin para sombra de foco acessível
-@mixin ufpel-focus-shadow($color: $ufpel-primary) {
+// Mixin para sombra de foco acessível WCAG 2.2
+@mixin ufpel-focus-shadow($color: $ufpel-primary, $opacity: 0.25) {
   &:focus,
   &:focus-visible {
     outline: 2px solid transparent;
-    box-shadow: 0 0 0 2px $color;
+    box-shadow: 0 0 0 0.2rem rgba($color, $opacity);
+    outline-offset: 2px;
   }
 }
 
-// Mixin para transições suaves
+// Mixin para transições suaves com redução de movimento
 @mixin ufpel-transition($properties: all, $duration: 0.2s, $timing: ease-in-out) {
   transition: $properties $duration $timing;
+  
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 // Mixin para texto truncado com acessibilidade
-@mixin ufpel-text-truncate {
+@mixin ufpel-text-truncate($max-width: 100%) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: $max-width;
   
   // Melhora acessibilidade para leitores de tela
   &[title] {
     cursor: help;
+  }
+}
+
+// Mixin para cards responsivos
+@mixin ufpel-card($padding: 1rem, $border-radius: $border-radius) {
+  background: $ufpel-highlight-text;
+  border: 1px solid rgba($ufpel-primary, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $box-shadow-sm;
+  padding: $padding;
+  @include ufpel-transition(all);
+  
+  &:hover {
+    box-shadow: $box-shadow;
+    transform: translateY(-2px);
+    
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
+  }
+}
+
+// Mixin para elementos interativos
+@mixin ufpel-interactive($scale: 1.02) {
+  cursor: pointer;
+  @include ufpel-transition(transform);
+  @include ufpel-focus-shadow();
+  
+  &:hover,
+  &:focus {
+    transform: scale($scale);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    &:hover,
+    &:focus,
+    &:active {
+      transform: none;
+    }
   }
 }
 
@@ -144,20 +307,18 @@ $min-contrast-ratio-large: 3 !default;
 // Tamanhos mínimos de toque para dispositivos móveis (44px)
 $min-touch-target: 44px !default;
 
-// Configurações de movimento reduzido para usuários com preferências de acessibilidade
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+// Focus ring para acessibilidade
+$focus-ring-width: 0.25rem !default;
+$focus-ring-opacity: 0.25 !default;
+$focus-ring-color: rgba($ufpel-primary, $focus-ring-opacity) !default;
+$focus-ring-blur: 0 !default;
+$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color !default;
 
 // ========================================================================
-// CONFIGURAÇÕES DE RESPONSIVIDADE
+// CONFIGURAÇÕES DE RESPONSIVIDADE (Moodle 5.x)
 // ========================================================================
 
-// Breakpoints personalizados UFPel
+// Breakpoints atualizados para Bootstrap 5/Moodle 5.x
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
@@ -166,6 +327,89 @@ $grid-breakpoints: (
   xl: 1200px,
   xxl: 1400px
 ) !default;
+
+// Grid system
+$grid-columns: 12 !default;
+$grid-gutter-width: 1.5rem !default;
+$grid-row-columns: 6 !default;
+
+// Container padding
+$container-padding-x: $grid-gutter-width * 0.5 !default;
+
+// ========================================================================
+// CONFIGURAÇÕES DE MOTION E ANIMAÇÃO
+// ========================================================================
+
+$enable-transitions: true !default;
+$transition-base: all 0.2s ease-in-out !default;
+$transition-fade: opacity 0.15s linear !default;
+$transition-collapse: height 0.35s ease !default;
+
+// Configurações de movimento reduzido para usuários com preferências de acessibilidade
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ========================================================================
+// VARIÁVEIS CSS CUSTOMIZADAS (CSS Custom Properties)
+// ========================================================================
+
+:root {
+  // Cores UFPel como CSS Custom Properties
+  --bs-ufpel-primary: #{$ufpel-primary};
+  --bs-ufpel-primary-rgb: #{to-rgb($ufpel-primary)};
+  --bs-ufpel-secondary: #{$ufpel-secondary};
+  --bs-ufpel-secondary-rgb: #{to-rgb($ufpel-secondary)};
+  --bs-ufpel-accent: #{$ufpel-accent};
+  --bs-ufpel-accent-rgb: #{to-rgb($ufpel-accent)};
+  --bs-ufpel-background: #{$ufpel-background};
+  --bs-ufpel-text: #{$ufpel-text};
+  --bs-ufpel-highlight-text: #{$ufpel-highlight-text};
+  
+  // Fontes
+  --bs-ufpel-font-family: #{$font-family-base};
+  
+  // Espaçamentos
+  --bs-ufpel-navbar-height: #{$navbar-brand-height};
+  --bs-ufpel-border-radius: #{$border-radius};
+  
+  // Sombras
+  --bs-ufpel-box-shadow: #{$box-shadow};
+  --bs-ufpel-box-shadow-lg: #{$box-shadow-lg};
+}
+
+// ========================================================================
+// CONFIGURAÇÕES DE ALTO CONTRASTE
+// ========================================================================
+
+@media (prefers-contrast: high) {
+  :root {
+    --bs-ufpel-primary: #{darken($ufpel-primary, 10%)};
+    --bs-ufpel-secondary: #{darken($ufpel-secondary, 10%)};
+    --bs-border-width: 2px;
+  }
+}
+
+// ========================================================================
+// MODO ESCURO (PREPARAÇÃO PARA FUTURAS VERSÕES)
+// ========================================================================
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Ajustes de cores para modo escuro
+    --bs-ufpel-background: #1a1a2e;
+    --bs-ufpel-text: #e0e0e0;
+    --bs-body-bg: var(--bs-ufpel-background);
+    --bs-body-color: var(--bs-ufpel-text);
+    --bs-ufpel-primary: #{lighten($ufpel-primary, 15%)};
+    --bs-ufpel-secondary: #{lighten($ufpel-secondary, 15%)};
+  }
+}
 
 // ========================================================================
 // CONFIGURAÇÕES DE IMPRESSÃO
@@ -176,7 +420,9 @@ $grid-breakpoints: (
   .navbar,
   .sidebar,
   .footer,
-  .btn {
+  .btn,
+  .ufpel-course-header-image,
+  .ufpel-course-meta {
     display: none !important;
   }
   
@@ -191,9 +437,30 @@ $grid-breakpoints: (
   a,
   a:visited {
     text-decoration: underline;
+    color: #000 !important;
   }
   
   a[href]:after {
     content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+  
+  // Melhora layout para impressão
+  .container-fluid {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  p, blockquote {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  blockquote {
+    page-break-inside: avoid;
   }
 }

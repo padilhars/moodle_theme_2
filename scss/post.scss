@@ -2,7 +2,7 @@
  * Tema UFPel - SCSS Pós-processamento
  * 
  * Este arquivo contém os estilos finais e ajustes específicos
- * do tema UFPel aplicados após o preset principal.
+ * do tema UFPel aplicados após o preset principal para Moodle 5.x.
  * Inclui overrides, customizações e melhorias de acessibilidade.
  *
  * @package    theme_ufpel
@@ -11,39 +11,60 @@
  */
 
 // ========================================================================
-// ESTILOS GLOBAIS UFPel
+// ESTILOS GLOBAIS UFPel (Moodle 5.x)
 // ========================================================================
 
 body {
   font-family: $font-family-base;
-  line-height: 1.6;
+  line-height: $line-height-base;
   @include ufpel-transition(all);
+  scroll-behavior: smooth;
+  
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
+
+// Melhorias de seleção de texto
+::selection {
+  background-color: rgba($ufpel-accent, 0.3);
+  color: $ufpel-text;
+}
+
+::-moz-selection {
+  background-color: rgba($ufpel-accent, 0.3);
+  color: $ufpel-text;
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DA NAVBAR
+// CUSTOMIZAÇÃO DA NAVBAR (Moodle 5.x)
 // ========================================================================
 
 .navbar {
   background: linear-gradient(135deg, $ufpel-primary 0%, $ufpel-secondary 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba($ufpel-accent, 0.3);
+  backdrop-filter: blur(10px);
   
   .navbar-brand {
     font-weight: $font-weight-bold;
     color: $ufpel-highlight-text !important;
-    @include ufpel-transition(transform);
+    @include ufpel-transition(all);
+    @include ufpel-focus-shadow($ufpel-highlight-text);
     
     &:hover {
+      color: $ufpel-accent !important;
       transform: scale(1.02);
     }
     
     img {
       max-height: $navbar-brand-height;
       width: auto;
-      @include ufpel-transition(opacity);
+      @include ufpel-transition(all);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
       
       &:hover {
-        opacity: 0.9;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)) brightness(1.05);
       }
     }
   }
@@ -51,110 +72,252 @@ body {
   .navbar-nav {
     .nav-link {
       color: rgba($ufpel-highlight-text, 0.9) !important;
-      font-weight: $font-weight-normal;
-      @include ufpel-transition(color);
+      font-weight: $font-weight-medium;
+      padding: 0.75rem 1rem;
+      border-radius: $border-radius;
+      @include ufpel-transition(all);
       @include ufpel-focus-shadow($ufpel-highlight-text);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s ease;
+      }
+      
+      &:hover::before {
+        left: 100%;
+      }
       
       &:hover,
       &:focus {
         color: $ufpel-highlight-text !important;
+        background-color: rgba($ufpel-highlight-text, 0.1);
+        backdrop-filter: blur(5px);
       }
       
       &.active {
         color: $ufpel-accent !important;
         font-weight: $font-weight-semibold;
+        background-color: rgba($ufpel-accent, 0.1);
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          width: 20px;
+          height: 2px;
+          background-color: $ufpel-accent;
+          transform: translateX(-50%);
+          border-radius: 1px;
+        }
+      }
+    }
+    
+    .dropdown-menu {
+      background: rgba($ufpel-highlight-text, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba($ufpel-primary, 0.1);
+      box-shadow: $box-shadow-lg;
+      border-radius: $border-radius-lg;
+      
+      .dropdown-item {
+        @include ufpel-transition(all);
+        
+        &:hover,
+        &:focus {
+          background-color: rgba($ufpel-primary, 0.1);
+          color: $ufpel-primary;
+        }
       }
     }
   }
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DO CABEÇALHO DO CURSO
+// CUSTOMIZAÇÃO DO CABEÇALHO DO CURSO (Moodle 5.x)
 // ========================================================================
 
-.course-header {
+.ufpel-course-header {
   position: relative;
   background: $ufpel-background;
-  border-radius: $border-radius-lg;
+  border-radius: $border-radius-xl;
   overflow: hidden;
   margin-bottom: 2rem;
   box-shadow: $box-shadow-lg;
+  border: 1px solid rgba($ufpel-primary, 0.1);
   
-  .course-header-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    filter: brightness(0.8);
-    @include ufpel-transition(filter);
+  .ufpel-course-header-image {
+    position: relative;
+    overflow: hidden;
     
-    &:hover {
-      filter: brightness(0.9);
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      filter: brightness(0.8) contrast(1.1);
+      @include ufpel-transition(all);
+      
+      &:hover {
+        filter: brightness(0.9) contrast(1.2);
+        transform: scale(1.02);
+      }
     }
   }
   
-  .course-header-content {
+  .ufpel-course-header-content {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     padding: 2rem;
     color: $ufpel-highlight-text;
     
-    .course-title {
-      font-size: 2rem;
+    .ufpel-course-title {
+      font-size: 2.5rem;
       font-weight: $font-weight-bold;
       margin: 0;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      @include ufpel-text-truncate;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+      @include ufpel-text-truncate();
+      line-height: 1.2;
+      
+      a {
+        color: inherit;
+        text-decoration: none;
+        @include ufpel-focus-shadow($ufpel-accent);
+        
+        &:hover {
+          color: $ufpel-accent;
+        }
+      }
       
       @media (max-width: 768px) {
+        font-size: 1.75rem;
+      }
+      
+      @media (max-width: 576px) {
         font-size: 1.5rem;
       }
     }
     
-    .course-subtitle {
-      font-size: 1.125rem;
+    .ufpel-course-subtitle {
+      font-size: 1.25rem;
       opacity: 0.9;
       margin-top: 0.5rem;
+      font-weight: $font-weight-normal;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .ufpel-course-meta {
+      .badge {
+        font-size: 0.75rem;
+        font-weight: $font-weight-medium;
+        padding: 0.5rem 0.75rem;
+        border-radius: $border-radius-lg;
+        @include ufpel-transition(all);
+        backdrop-filter: blur(5px);
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        i {
+          margin-right: 0.25rem;
+        }
+      }
     }
   }
   
   // Fallback quando não há imagem de curso
   &.no-image {
-    background: $ufpel-primary;
+    background: linear-gradient(135deg, $ufpel-primary 0%, $ufpel-secondary 100%);
+    color: $ufpel-highlight-text;
     
-    .course-header-content {
+    .ufpel-course-header-content {
       position: static;
       background: transparent;
+      padding: 3rem 2rem;
     }
+  }
+  
+  // Overlay personalizado
+  .ufpel-course-header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    pointer-events: none;
   }
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DE CARDS E CONTAINERS
+// CUSTOMIZAÇÃO DE CARDS E CONTAINERS (Moodle 5.x)
 // ========================================================================
 
 .card {
-  border: $card-border-width solid $card-border-color;
-  border-radius: $card-border-radius;
-  box-shadow: $card-box-shadow;
-  @include ufpel-transition(all);
-  
-  &:hover {
-    box-shadow: $box-shadow-lg;
-    transform: translateY(-2px);
-  }
+  @include ufpel-card();
   
   .card-header {
-    background: rgba($ufpel-primary, 0.05);
-    border-bottom: 1px solid rgba($ufpel-primary, 0.1);
+    background: linear-gradient(135deg, 
+      rgba($ufpel-primary, 0.05) 0%, 
+      rgba($ufpel-secondary, 0.05) 100%);
+    border-bottom: 1px solid rgba($ufpel-primary, 0.15);
     font-weight: $font-weight-semibold;
+    color: $ufpel-primary;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, $ufpel-primary, $ufpel-secondary);
+      border-radius: 0 $border-radius 0 0;
+    }
+  }
+  
+  .card-body {
+    position: relative;
+  }
+  
+  .card-footer {
+    background: rgba($ufpel-background, 0.5);
+    border-top: 1px solid rgba($ufpel-primary, 0.1);
+  }
+}
+
+// Cards especiais UFPel
+.ufpel-course-card {
+  border: 2px solid transparent;
+  background: linear-gradient($ufpel-highlight-text, $ufpel-highlight-text) padding-box,
+              linear-gradient(45deg, $ufpel-primary, $ufpel-secondary) border-box;
+  
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: $box-shadow-lg;
   }
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DE BOTÕES
+// CUSTOMIZAÇÃO DE BOTÕES (Moodle 5.x)
 // ========================================================================
 
 .btn {
@@ -162,101 +325,171 @@ body {
   font-weight: $btn-font-weight;
   @include ufpel-transition(all);
   @include ufpel-focus-shadow();
+  position: relative;
+  overflow: hidden;
+  min-height: $min-touch-target;
+  
+  // Efeito ripple
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: width 0.3s ease, height 0.3s ease;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  
+  &:active::before {
+    width: 300px;
+    height: 300px;
+  }
   
   // Botão primário UFPel
   &.btn-primary {
-    background: $ufpel-primary;
+    background: linear-gradient(135deg, $ufpel-primary 0%, darken($ufpel-primary, 10%) 100%);
     border-color: $ufpel-primary;
+    color: $ufpel-highlight-text;
+    box-shadow: 0 4px 8px rgba($ufpel-primary, 0.2);
     
     &:hover,
     &:focus {
-      background: darken($ufpel-primary, 10%);
+      background: linear-gradient(135deg, darken($ufpel-primary, 5%) 0%, darken($ufpel-primary, 15%) 100%);
       border-color: darken($ufpel-primary, 10%);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba($ufpel-primary, 0.3);
     }
     
     &:active {
       transform: translateY(0);
+      box-shadow: 0 2px 4px rgba($ufpel-primary, 0.2);
     }
   }
   
   // Botão secundário UFPel
   &.btn-secondary {
-    background: $ufpel-secondary;
+    background: linear-gradient(135deg, $ufpel-secondary 0%, darken($ufpel-secondary, 10%) 100%);
     border-color: $ufpel-secondary;
+    color: $ufpel-highlight-text;
     
     &:hover,
     &:focus {
-      background: darken($ufpel-secondary, 10%);
+      background: linear-gradient(135deg, darken($ufpel-secondary, 5%) 0%, darken($ufpel-secondary, 15%) 100%);
       border-color: darken($ufpel-secondary, 10%);
     }
   }
   
   // Botão de destaque UFPel
   &.btn-warning {
-    background: $ufpel-accent;
+    background: linear-gradient(135deg, $ufpel-accent 0%, darken($ufpel-accent, 10%) 100%);
     border-color: $ufpel-accent;
     color: $ufpel-text;
     
     &:hover,
     &:focus {
-      background: darken($ufpel-accent, 10%);
+      background: linear-gradient(135deg, darken($ufpel-accent, 5%) 0%, darken($ufpel-accent, 15%) 100%);
       border-color: darken($ufpel-accent, 10%);
+      color: $ufpel-text;
+    }
+  }
+  
+  // Botão outline UFPel
+  &.btn-outline-primary {
+    border: 2px solid $ufpel-primary;
+    color: $ufpel-primary;
+    background: transparent;
+    
+    &:hover,
+    &:focus {
+      background: $ufpel-primary;
+      color: $ufpel-highlight-text;
+      transform: translateY(-2px);
     }
   }
 }
 
 // ========================================================================
-// MELHORIAS DE ACESSIBILIDADE
+// MELHORIAS DE ACESSIBILIDADE (WCAG 2.2)
 // ========================================================================
 
 // Foco visível aprimorado
-*:focus,
 *:focus-visible {
   outline: 2px solid $ufpel-primary;
   outline-offset: 2px;
+  border-radius: $border-radius-sm;
 }
 
 // Skip links para navegação por teclado
+.ufpel-skip-link,
 .skip-link {
   position: absolute;
   top: -40px;
   left: 6px;
   background: $ufpel-primary;
   color: $ufpel-highlight-text;
-  padding: 8px;
+  padding: 8px 12px;
   text-decoration: none;
   border-radius: $border-radius;
   z-index: 9999;
+  font-weight: $font-weight-medium;
+  @include ufpel-transition(all);
   
   &:focus {
     top: 6px;
+    color: $ufpel-highlight-text;
+    text-decoration: none;
+    box-shadow: $box-shadow-lg;
   }
 }
 
 // Contraste aprimorado para texto
 .text-muted {
-  color: lighten($ufpel-text, 20%) !important;
+  color: lighten($ufpel-text, 15%) !important;
+}
+
+// Indicador de elementos interativos
+button,
+.btn,
+a[role="button"],
+input[type="submit"],
+input[type="button"] {
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DE LINKS
+// CUSTOMIZAÇÃO DE LINKS (Moodle 5.x)
 // ========================================================================
 
 a {
   color: $link-color;
   text-decoration: $link-decoration;
-  @include ufpel-transition(color);
+  @include ufpel-transition(all);
   
   &:hover,
   &:focus {
     color: $link-hover-color;
     text-decoration: $link-hover-decoration;
+    
+    // Efeito sublinhado animado
+    background-image: linear-gradient(to right, $ufpel-accent, $ufpel-accent);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
   }
   
   // Links em contexto escuro
   .bg-dark &,
-  .navbar & {
+  .navbar &,
+  .ufpel-course-header & {
     color: $ufpel-highlight-text;
     
     &:hover,
@@ -264,70 +497,109 @@ a {
       color: $ufpel-accent;
     }
   }
+  
+  // Links externos
+  &[target="_blank"]::after {
+    content: "↗";
+    font-size: 0.8em;
+    margin-left: 0.25rem;
+    opacity: 0.7;
+  }
 }
 
 // ========================================================================
-// CUSTOMIZAÇÃO DA SIDEBAR E BLOCOS
+// CUSTOMIZAÇÃO DA SIDEBAR E BLOCOS (Moodle 5.x)
 // ========================================================================
 
 .block {
-  background: $ufpel-highlight-text;
-  border: 1px solid rgba($ufpel-primary, 0.1);
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
+  @include ufpel-card();
+  margin-bottom: 1.5rem;
   
   .block-header {
-    background: rgba($ufpel-primary, 0.05);
-    border-bottom: 1px solid rgba($ufpel-primary, 0.1);
+    background: linear-gradient(135deg, 
+      rgba($ufpel-primary, 0.05) 0%, 
+      rgba($ufpel-secondary, 0.05) 100%);
+    border-bottom: 1px solid rgba($ufpel-primary, 0.15);
     padding: 1rem;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, $ufpel-primary, $ufpel-secondary);
+    }
     
     .block-title {
       color: $ufpel-primary;
       font-weight: $font-weight-semibold;
       margin: 0;
+      font-size: 1.1rem;
     }
   }
   
   .block-content {
     padding: 1rem;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba($ufpel-primary, 0.1);
+        @include ufpel-transition(all);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        &:hover {
+          background-color: rgba($ufpel-background, 0.5);
+          transform: translateX(4px);
+          border-radius: $border-radius-sm;
+        }
+      }
+    }
   }
 }
 
 // ========================================================================
-// RESPONSIVIDADE E MOBILE
-// ========================================================================
-
-@media (max-width: 768px) {
-  .navbar-brand {
-    font-size: 1.25rem;
-  }
-  
-  .course-header {
-    margin-bottom: 1rem;
-    
-    .course-header-image {
-      height: 150px;
-    }
-    
-    .course-header-content {
-      padding: 1rem;
-    }
-  }
-  
-  .card {
-    margin-bottom: 1rem;
-  }
-}
-
-// ========================================================================
-// CUSTOMIZAÇÃO DE FORMULÁRIOS
+// CUSTOMIZAÇÃO DE FORMULÁRIOS (Moodle 5.x)
 // ========================================================================
 
 .form-control {
   border: 1px solid rgba($ufpel-primary, 0.2);
   border-radius: $border-radius;
-  @include ufpel-transition(border-color);
+  @include ufpel-transition(all);
   @include ufpel-focus-shadow();
+  
+  &:focus {
+    border-color: $ufpel-primary;
+    box-shadow: 0 0 0 0.2rem rgba($ufpel-primary, 0.25);
+    background-color: rgba($ufpel-background, 0.3);
+  }
+  
+  &:invalid {
+    border-color: $ufpel-danger;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($ufpel-danger, 0.25);
+    }
+  }
+}
+
+.form-label {
+  font-weight: $font-weight-semibold;
+  color: $ufpel-text;
+  margin-bottom: 0.5rem;
+}
+
+.form-select {
+  @extend .form-control;
   
   &:focus {
     border-color: $ufpel-primary;
@@ -335,27 +607,84 @@ a {
   }
 }
 
-.form-label {
-  font-weight: $font-weight-semibold;
-  color: $ufpel-text;
-}
-
 // ========================================================================
-// CUSTOMIZAÇÃO DE ALERTAS E NOTIFICAÇÕES
+// CUSTOMIZAÇÃO DE ALERTAS E NOTIFICAÇÕES (Moodle 5.x)
 // ========================================================================
 
 .alert {
   border-radius: $border-radius;
   border: none;
+  border-left: 4px solid;
+  backdrop-filter: blur(5px);
+  @include ufpel-transition(all);
   
   &.alert-primary {
     background: rgba($ufpel-primary, 0.1);
-    color: $ufpel-primary;
+    color: darken($ufpel-primary, 20%);
+    border-left-color: $ufpel-primary;
+  }
+  
+  &.alert-success {
+    background: rgba($ufpel-success, 0.1);
+    color: darken($ufpel-success, 20%);
+    border-left-color: $ufpel-success;
   }
   
   &.alert-warning {
     background: rgba($ufpel-accent, 0.1);
     color: darken($ufpel-accent, 30%);
+    border-left-color: $ufpel-accent;
+  }
+  
+  &.alert-danger {
+    background: rgba($ufpel-danger, 0.1);
+    color: darken($ufpel-danger, 20%);
+    border-left-color: $ufpel-danger;
+  }
+  
+  &.alert-info {
+    background: rgba($ufpel-info, 0.1);
+    color: darken($ufpel-info, 20%);
+    border-left-color: $ufpel-info;
+  }
+  
+  .alert-heading {
+    font-weight: $font-weight-semibold;
+  }
+}
+
+// ========================================================================
+// CUSTOMIZAÇÃO DE TABELAS (Moodle 5.x)
+// ========================================================================
+
+.table {
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $box-shadow-sm;
+  
+  thead th {
+    background: linear-gradient(135deg, $ufpel-primary, $ufpel-secondary);
+    color: $ufpel-highlight-text;
+    font-weight: $font-weight-semibold;
+    border: none;
+  }
+  
+  tbody tr {
+    @include ufpel-transition(all);
+    
+    &:hover {
+      background-color: rgba($ufpel-background, 0.5);
+      transform: scale(1.01);
+    }
+    
+    &:nth-child(even) {
+      background-color: rgba($ufpel-background, 0.2);
+    }
+  }
+  
+  td, th {
+    border-color: rgba($ufpel-primary, 0.1);
+    padding: 1rem;
   }
 }
 
@@ -363,16 +692,27 @@ a {
 // UTILITÁRIOS PERSONALIZADOS UFPel
 // ========================================================================
 
+// Gradiente UFPel
 .ufpel-gradient {
   @include ufpel-gradient();
 }
 
+// Sombras UFPel
 .ufpel-shadow {
   box-shadow: $box-shadow-lg;
 }
 
+.ufpel-shadow-sm {
+  box-shadow: $box-shadow-sm;
+}
+
+// Bordas UFPel
 .ufpel-border {
   border: 2px solid $ufpel-primary;
+}
+
+.ufpel-border-accent {
+  border: 2px solid $ufpel-accent;
 }
 
 // Classes para cores institucionais
@@ -383,3 +723,110 @@ a {
 .bg-ufpel-primary { background-color: $ufpel-primary !important; }
 .bg-ufpel-secondary { background-color: $ufpel-secondary !important; }
 .bg-ufpel-accent { background-color: $ufpel-accent !important; }
+
+// Animações sutis
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.ufpel-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.ufpel-pulse {
+  animation: pulse 2s infinite;
+}
+
+// ========================================================================
+// RESPONSIVIDADE E MOBILE (Moodle 5.x)
+// ========================================================================
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+  
+  .ufpel-course-header {
+    margin-bottom: 1rem;
+    border-radius: $border-radius;
+    
+    .ufpel-course-header-image img {
+      height: 150px;
+    }
+    
+    .ufpel-course-header-content {
+      padding: 1rem;
+    }
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    min-height: 48px; // Maior área de toque em mobile
+  }
+  
+  .table {
+    font-size: 0.875rem;
+    
+    td, th {
+      padding: 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .ufpel-course-meta {
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.375rem 0.5rem;
+    }
+  }
+}
+
+// ========================================================================
+// MODO ESCURO (PREPARAÇÃO FUTURA)
+// ========================================================================
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: darken($ufpel-background, 40%);
+    color: lighten($ufpel-text, 40%);
+  }
+  
+  .table {
+    color: lighten($ufpel-text, 40%);
+    
+    tbody tr:nth-child(even) {
+      background-color: rgba(lighten($ufpel-primary, 20%), 0.1);
+    }
+  }
+  
+  .form-control {
+    background-color: darken($ufpel-background, 30%);
+    color: lighten($ufpel-text, 40%);
+    border-color: rgba(lighten($ufpel-primary, 20%), 0.3);
+  }
+}
